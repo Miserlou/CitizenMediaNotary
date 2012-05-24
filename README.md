@@ -16,6 +16,12 @@ Check the slideshow: http://openwatch.net/static/evidence.key.pdf
 * Come up with a spec
 * Federated servers? PubSub, maybe?
 
+## TODO:
+
+* Define and implement schema
+* Storage (New documents + federation) and Retrieval
+* Crypto
+
 ## Language Choice
 
 I think I'm going to do this one in Node because Django doesn't play super nicely with non relational databases.
