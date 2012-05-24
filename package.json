@@ -8,6 +8,7 @@
     "config": "0.4.9",
     "express": "x.x.x",
     "yaml": "x.x.x",
+    "commonjs-utils": "x.x.x",
     "jqtpl": "1.1.x",
   },
   "engine": "node >= 0.6.0"

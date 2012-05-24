@@ -1,0 +1,17 @@
+{
+  "type" : "object",
+  "properties" : {
+    "users" : {
+      "type" : "object", // remember that arrays are objects
+      "items" : { // "items" represents the items within the "users" array
+        "type" : "object",
+        "properties" : {
+          "id": { "type": "number" },
+          "username": { "type" : "string" },
+          "numPosts": { "type" : "number" },
+          "realName": { "type" : "string", optional: true }
+        }
+      }
+    }
+  }
+}

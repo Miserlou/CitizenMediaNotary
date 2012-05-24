@@ -1,10 +1,17 @@
 // Requirements
+
+// Web requirements
 var app = require('express').createServer()
   , express = require('express')
   , jqtpl = require("jqtpl");
 
+// DB Requirements
 var cradle = require('cradle');
 var db = new(cradle.Connection)().database('notary');
+
+// Validation requirements
+var sys = require('util'), fs = require('fs');
+var validate = require('commonjs-utils/lib/json-schema').validate;
 
 // Load the config file
 var config = require('config').Server;
@@ -30,5 +37,21 @@ db.exists(function (err, exists) {
   } else {
     console.log('No database. Creating one..');
     db.create();
+    // It crashes here the first time. Wtf.
   }
+});
+
+
+// Validation stuff
+
+// Load a schema by which to validate
+fs.readFile(__dirname + '/schema/schema.json',function(err,data) {
+  if(err) throw err;
+  var schema = data;
+
+    // var posts = JSON.parse(data);
+    // Validate
+    // var validation = validate(posts, schema);
+    // Echo to command line
+    // sys.puts('The result of the validation:  ',validation.valid);
 });
