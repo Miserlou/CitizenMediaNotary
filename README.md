@@ -10,11 +10,11 @@ Check the slideshow: http://openwatch.net/static/evidence.key.pdf
 
 ## Goals:
 
-Secure-by-default.
-Publically queriable (but perhaps not publicaly browsable.)
-Easy to deploy.
-Come up with a spec
-Federated servers? PubSub, maybe?
+* Secure-by-default.
+* Publically queriable (but perhaps not publicaly browsable.)
+* Easy to deploy.
+* Come up with a spec
+* Federated servers? PubSub, maybe?
 
 ## Language Choice
 
