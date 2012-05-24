@@ -32,6 +32,6 @@ Make sure you have latest node, npm and CouchDB installed.
 
 > npm install
 
-> server.js
+> node server.js
 
 More details soon..
