@@ -1,0 +1,12 @@
+{
+  "name": "citzenmedianotary",
+  "description": "Verified Citizen Media",
+  "author": "Rich Jones <rich@gun.io>",
+  "version": "0.0.1",
+  "dependencies": {
+    "cradle": "x.x.x",
+    "express": "2.5.x",
+    "config": "0.4.9"
+  },
+  "engine": "node >= 0.6.0"
+}

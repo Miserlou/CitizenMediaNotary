@@ -22,4 +22,15 @@ I think I'm going to do this one in Node because Django doesn't play super nicel
 
 The drawback is that Node is kind of a pain in the ass to deploy.
 
+## Database
+
+For now, it's gonna use CouchDB. Opinions welcome.
+
+## Install
+
+Make sure you have latest node, npm and couch installed.
+
+> npm install
+> server.js
+
 More details soon..
