@@ -1,17 +1,61 @@
 {
-  "type" : "object",
-  "properties" : {
-    "users" : {
-      "type" : "object", // remember that arrays are objects
-      "items" : { // "items" represents the items within the "users" array
-        "type" : "object",
-        "properties" : {
-          "id": { "type": "number" },
-          "username": { "type" : "string" },
-          "numPosts": { "type" : "number" },
-          "realName": { "type" : "string", optional: true }
-        }
-      }
-    }
+ "name":"Recording",
+ "properties":{
+   "filename":{
+     "type":"number",
+     "description":"Recording filename",
+     "required":true
+   },
+   "hash":{
+     "description":"Hash of file",
+     "type":"string",
+     "required":true
+   },
+   "hashAlgorithm":{
+     "description":"Hash algorithm",
+     "type":"string",
+     "required":true
+   },
+   "time":{
+     "description":"Reported time of recorded incident in UTC format.",
+     "type":"string",
+     "required":true,
+     "format":"date-time",
+   },
+   "size":{
+     "description":"Size of file, in bytes.",
+     "type":"float",
+     "required":true,
+   },
+   "latitude":{
+     "description":"GPS Latitude",
+     "type":"float",
+     "required":false,
+   },
+   "longitude":{
+     "description":"GPS Longitude",
+     "type":"float",
+     "required":false,
+   },
+   "deviceID":{
+     "description":"Uniquely identifying information of capturing device.",
+     "type":"string",
+     "required":false,
+   },
+   "operatingSystem":{
+     "description":"Operating system of capturing device.",
+     "type":"string",
+     "required":false,
+   },
+    "software":{
+     "description":"Software which captured the recording.",
+     "type":"string",
+     "required":true,
+   },
+    "softwareVersion":{
+     "description":"Recording software version.",
+     "type":"string",
+     "required":true,
+   },
   }
 }
