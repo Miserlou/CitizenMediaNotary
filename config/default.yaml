@@ -1,3 +1,4 @@
 Server:
   siteDomain: localhost
   port: 2000
+  signatureAlgorithm: RSA-SHA256 

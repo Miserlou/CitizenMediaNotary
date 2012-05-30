@@ -38,6 +38,13 @@ Make sure you have latest node, npm and CouchDB installed.
 
 > npm install
 
+### Set up cryptographic keys
+
+* See ./crypto/CRYPTO.md for instructions.
+
+### Run Server
+
 > node server.js
+
 
 More details soon..

@@ -5,6 +5,9 @@ var app = require('express').createServer()
   , express = require('express')
   , jqtpl = require("jqtpl");
 
+// Load the config file
+var config = require('config').Server;
+
 // DB Requirements
 var cradle = require('cradle');
 var db = new(cradle.Connection)().database('notary');
@@ -13,8 +16,10 @@ var db = new(cradle.Connection)().database('notary');
 var sys = require('util'), fs = require('fs');
 var validate = require('commonjs-utils/lib/json-schema').validate;
 
-// Load the config file
-var config = require('config').Server;
+// Crypto setup
+var crypto = require('crypto');
+var signer = crypto.createSign(config.signatureAlgorithm);
+var verifier = crypto.createVerify(config.signatureAlgorithm);
 
  // App Stuff
 app.use('/public', express.static(__dirname + '/public'));
@@ -25,6 +30,7 @@ app.register(".html", require("jqtpl").express);
 
 app.get('/', function (req, res) {
   res.render(__dirname + '/html/index.html', {domain: config.siteDomain});
+  console.log('does this work?');
 });
 
 // DB Stuff
