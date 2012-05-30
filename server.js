@@ -23,15 +23,62 @@ var verifier = crypto.createVerify(config.signatureAlgorithm);
 
  // App Stuff
 app.use('/public', express.static(__dirname + '/public'));
+app.use(express.bodyParser()); //nicer POST
 app.listen(config.port);
 app.set("view engine", "html");
 app.set("view options", {layout: false});
 app.register(".html", require("jqtpl").express);
 
+app.post('/new', function(req, res){
+    console.log(req.body);
+
+    // Validate
+    metadata = req.body;
+    metadata['storeTime'] = new Date().getTime();
+
+    //var posts = JSON.parse(metadata);
+    //var validation = validate(metadata, schema);
+    //sys.puts('The result of the validation: ', validation.valid);
+
+    // Sign
+    //var signature = signer.sign(metadata, config.signatureAlgorithm);
+    //metadata['signature'] = signature
+
+    // Store
+    db.save(req.body.hash, metadata, function (err, res) {
+          if (err) {
+              // TODO. Handle error
+          } else {
+             console.log('Entry saved.');
+          }
+      });
+
+    // Share
+
+
+    // Return response
+    res.send(req.body);
+});
+
+app.post('/duplicate', function(req, res){
+
+    // Verify and store duplicate
+
+    // Return response
+    res.send(req.body);
+});
+
+app.get('/verify/:hash', function (req, res) {
+
+  console.log("Verifying..");
+  console.log(hash);
+  res.render(__dirname + '/html/index.html', {domain: config.siteDomain});
+});
+
 app.get('/', function (req, res) {
   res.render(__dirname + '/html/index.html', {domain: config.siteDomain});
-  console.log('does this work?');
 });
+
 
 // DB Stuff
 
