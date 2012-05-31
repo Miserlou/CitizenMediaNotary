@@ -29,12 +29,24 @@ app.set("view engine", "html");
 app.set("view options", {layout: false});
 app.register(".html", require("jqtpl").express);
 
+// Validate, sign, store and duplicate a new record.
 app.post('/new', function(req, res){
     console.log(req.body);
 
     // Validate
     metadata = req.body;
     metadata['storeTime'] = new Date().getTime();
+
+    //Get remote address
+    if(req.headers['x-forwarded-for']){
+        ip_address = req.headers['x-forwarded-for'];
+    }
+    else {
+        ip_address = req.connection.remoteAddress;
+    }
+
+    metadata['remoteAddress'] = ip_address;
+    metadata['host'] = req.headers.host;
 
     //var posts = JSON.parse(metadata);
     //var validation = validate(metadata, schema);
@@ -60,6 +72,8 @@ app.post('/new', function(req, res){
     res.send(req.body);
 });
 
+
+// Verify and store a duplicate from a sister server.
 app.post('/duplicate', function(req, res){
 
     // Verify and store duplicate
@@ -68,20 +82,27 @@ app.post('/duplicate', function(req, res){
     res.send(req.body);
 });
 
-app.get('/verify/:hash', function (req, res) {
 
-  console.log("Verifying..");
-  console.log(hash);
-  res.render(__dirname + '/html/index.html', {domain: config.siteDomain});
+// Check database for a record with the given hash.
+app.get('/verify/:hash', function (req, res) {
+  db.get(req.params.hash, 
+     function (err, doc) {
+        if (err) {
+            res.send("We have no record for a file of with that hash.");
+        } else {
+            res.send(doc);
+        }
+    });
+
 });
 
+// Homepage
 app.get('/', function (req, res) {
   res.render(__dirname + '/html/index.html', {domain: config.siteDomain});
 });
 
 
 // DB Stuff
-
 db.exists(function (err, exists) {
   if (err) {
     console.log('error', err);
