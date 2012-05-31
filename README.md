@@ -51,6 +51,7 @@ If you're developing, it's easier to use Supervisior, which will automatically r
 Supervisor requires that it be installed globally.
 
 > npm install -g supervisor
+
 > supervisor server.js
 
 More details soon..
