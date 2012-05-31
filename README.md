@@ -1,4 +1,5 @@
 # Citizen Media Notary
+![diagram](http://i.imgur.com/UK06t.png)
 
 Working on this. Don't use in production yet.
 
