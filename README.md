@@ -46,5 +46,11 @@ Make sure you have latest node, npm and CouchDB installed.
 
 > node server.js
 
+### Run with Supervisor
+If you're developing, it's easier to use Supervisior, which will automatically reload the app when it detects changes.
+Supervisor requires that it be installed globally.
+
+> npm install -g supervisor
+> supervisor server.js
 
 More details soon..

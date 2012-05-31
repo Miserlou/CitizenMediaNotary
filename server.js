@@ -21,6 +21,27 @@ var crypto = require('crypto');
 var signer = crypto.createSign(config.signatureAlgorithm);
 var verifier = crypto.createVerify(config.signatureAlgorithm);
 
+var publicKey;
+var privateKey;
+
+fs.readFile(__dirname + '/crypto/private.pem', 'utf8', function (err,data) {
+  if (err) {
+    console.log("Private key not found!");
+    return console.log(err);
+  }
+  privateKey = data;
+  console.log("Private key loaded.");
+});
+
+fs.readFile(__dirname + '/crypto/public.pem', 'utf8', function (err,data) {
+  if (err) {
+    console.log("Public key not found!");
+    return console.log(err);
+  }
+  publicKey = data;
+  console.log("Public key loaded.");
+});
+
  // App Stuff
 app.use('/public', express.static(__dirname + '/public'));
 app.use(express.bodyParser()); //nicer POST
@@ -31,9 +52,10 @@ app.register(".html", require("jqtpl").express);
 
 // Validate, sign, store and duplicate a new record.
 app.post('/new', function(req, res){
-    console.log(req.body);
 
-    // Validate
+    /*
+      Validate
+    */
     metadata = req.body;
     metadata['storeTime'] = new Date().getTime();
 
@@ -52,11 +74,17 @@ app.post('/new', function(req, res){
     //var validation = validate(metadata, schema);
     //sys.puts('The result of the validation: ', validation.valid);
 
-    // Sign
-    //var signature = signer.sign(metadata, config.signatureAlgorithm);
-    //metadata['signature'] = signature
+    /*
+      Sign
+    */
+    signer = crypto.createSign(config.signatureAlgorithm); //Signers can only be used once, so make a new one.
+    signer.update(JSON.stringify(metadata)); // Feed it
+    var signature = signer.sign(privateKey, 'base64'); // Signer is now spent.
+    metadata['signature'] = signature; // Attach it.
 
-    // Store
+    /*
+      Store
+    */
     db.save(req.body.hash, metadata, function (err, res) {
           if (err) {
               // TODO. Handle error
@@ -65,7 +93,9 @@ app.post('/new', function(req, res){
           }
       });
 
-    // Share
+    /*
+      Share
+    */
 
 
     // Return response
