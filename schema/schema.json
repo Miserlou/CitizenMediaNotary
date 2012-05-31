@@ -1,61 +1,65 @@
 {
- "name":"Recording",
- "properties":{
-   "filename":{
-     "type":"number",
-     "description":"Recording filename",
-     "required":true
-   },
-   "hash":{
-     "description":"Hash of file",
-     "type":"string",
-     "required":true
-   },
-   "hashAlgorithm":{
-     "description":"Hash algorithm",
-     "type":"string",
-     "required":true
-   },
-   "time":{
-     "description":"Reported time of recorded incident in UTC format.",
-     "type":"string",
-     "required":true,
-     "format":"date-time",
-   },
-   "size":{
-     "description":"Size of file, in bytes.",
-     "type":"float",
-     "required":true,
-   },
-   "latitude":{
-     "description":"GPS Latitude",
-     "type":"float",
-     "required":false,
-   },
-   "longitude":{
-     "description":"GPS Longitude",
-     "type":"float",
-     "required":false,
-   },
-   "deviceID":{
-     "description":"Uniquely identifying information of capturing device.",
-     "type":"string",
-     "required":false,
-   },
-   "operatingSystem":{
-     "description":"Operating system of capturing device.",
-     "type":"string",
-     "required":false,
-   },
-    "software":{
-     "description":"Software which captured the recording.",
-     "type":"string",
-     "required":true,
-   },
-    "softwareVersion":{
-     "description":"Recording software version.",
-     "type":"string",
-     "required":true,
-   },
-  }
+    "type": "object",
+    "description": "A schema for documents to be validated.",
+    "optional": false,
+    "name": "Recording",
+    "properties": {
+        "filename": {
+            "type": "string",
+            "description": "Recording filename",
+            "optional": false
+        },
+        "hash": {
+            "description": "Hash of file",
+            "type": "string",
+            "optional": false
+        },
+        "hashAlgorithm": {
+            "description": "Hash algorithm",
+            "type": "string",
+            "default": "SHA1",
+            "optional": false
+        },
+        "time": {
+            "description": "Reported time of recorded incident in UTC format.",
+            "type": "string",
+            "optional": false,
+            "format": "date-time"
+        },
+        "size": {
+            "description": "Size of file, in bytes.",
+            "type": "float",
+            "optional": false
+        },
+        "latitude": {
+            "description": "GPS Latitude",
+            "type": "float",
+            "optional": true
+        },
+        "longitude": {
+            "description": "GPS Longitude",
+            "type": "float",
+            "optional": true
+        },
+        "deviceID": {
+            "description": "Uniquely identifying information of capturing device.",
+            "type": "string",
+            "optional": true
+        },
+        "operatingSystem": {
+            "description": "Operating system of capturing device.",
+            "type": "string",
+            "optional": true
+        },
+        "software": {
+            "description": "Software which captured the recording.",
+            "type": "string",
+            "optional": true
+        },
+        "softwareVersion": {
+            "description": "Recording software version.",
+            "type": "string",
+            "optional": true
+        }
+    }
 }

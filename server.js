@@ -15,6 +15,7 @@ var db = new(cradle.Connection)().database('notary');
 // Validation requirements
 var sys = require('util'), fs = require('fs');
 var validate = require('commonjs-utils/lib/json-schema').validate;
+var schema;
 
 // Crypto setup
 var crypto = require('crypto');
@@ -70,14 +71,18 @@ app.post('/new', function(req, res){
     metadata['remoteAddress'] = ip_address;
     metadata['host'] = req.headers.host;
 
-    //var posts = JSON.parse(metadata);
-    //var validation = validate(metadata, schema);
-    //sys.puts('The result of the validation: ', validation.valid);
+    var validation = validate(metadata, schema);
+    console.log('Is this data valid.. ', validation.valid);
+
+    if (!validation.valid){
+      console.log(validation.errors);
+      return res.send("You sent some invalid data.");
+    }
 
     /*
       Sign
     */
-    signer = crypto.createSign(config.signatureAlgorithm); //Signers can only be used once, so make a new one.
+    var signer = crypto.createSign(config.signatureAlgorithm); //Signers can only be used once, so make a new one.
     signer.update(JSON.stringify(metadata)); // Feed it
     var signature = signer.sign(privateKey, 'base64'); // Signer is now spent.
     metadata['signature'] = signature; // Attach it.
@@ -85,11 +90,14 @@ app.post('/new', function(req, res){
     /*
       Store
     */
-    db.save(req.body.hash, metadata, function (err, res) {
+    db.save(metadata['hash'], metadata, function (err, res) {
           if (err) {
               // TODO. Handle error
+              console.log('Entry NOT saved!');
+              console.log(err);
           } else {
              console.log('Entry saved.');
+             //XXX Share.
           }
       });
 
@@ -145,17 +153,12 @@ db.exists(function (err, exists) {
   }
 });
 
+// Sharing
 
 // Validation stuff
 
 // Load a schema by which to validate
-fs.readFile(__dirname + '/schema/schema.json',function(err,data) {
+fs.readFile(__dirname + '/schema/schema.json', 'utf8', function(err,data) {
   if(err) throw err;
-  var schema = data;
-
-    // var posts = JSON.parse(data);
-    // Validate
-    // var validation = validate(posts, schema);
-    // Echo to command line
-    // sys.puts('The result of the validation:  ',validation.valid);
+  schema = JSON.parse(data);
 });
