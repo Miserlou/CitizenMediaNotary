@@ -19,9 +19,10 @@ Check the slideshow: http://openwatch.net/static/evidence.key.pdf
 
 ## TODO:
 
-* Define and implement schema
-* Storage (New documents + federation) and Retrieval
-* Crypto
+* Review schema
+* Crypto (Verification of signatures)
+* Duplication
+* Frontend
 
 ## Language Choice
 
