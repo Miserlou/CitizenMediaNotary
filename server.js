@@ -1,12 +1,26 @@
-// Requirements
+#!/usr/bin/env node
+
+/*
+  This is a CitizenMediaNotary server.
+  See README.md for more details.
+  http://notary.openwatch.net
+*/
+
+/*
+  Imports
+*/
 
 // Web requirements
 var app = require('express').createServer()
   , express = require('express')
   , jqtpl = require("jqtpl");
 
-// Load the config file
+var querystring = require('querystring');  
+var http = require('http'); 
+
+// Load the config file,
 var config = require('config').Server;
+var sisters;
 
 // DB Requirements
 var cradle = require('cradle');
@@ -25,6 +39,46 @@ var verifier = crypto.createVerify(config.signatureAlgorithm);
 var publicKey;
 var privateKey;
 
+/*
+  Functions
+*/
+
+function duplicateNotarization(host, data){
+
+  console.log(host.port);
+  console.log(host.address);
+
+  var encoded_data = querystring.stringify(data);
+
+  var options = {
+    host: host.address,
+    port: host.port,
+    path: '/duplicate',
+    method: 'POST'
+  };
+
+  var req = http.request(options, function(res) {
+    res.setEncoding('utf8');
+    res.on('data', function (chunk) {
+    });
+  });
+
+  req.on('error', function(e) {
+    console.log('Problem talking to', host.address, ': ')
+    console.log(e.message);
+  });
+
+  // write data to request body
+  req.write(encoded_data);
+  req.end();
+  
+}
+
+/*
+  Load local resources.
+*/
+
+// Keys open doors.
 fs.readFile(__dirname + '/crypto/private.pem', 'utf8', function (err,data) {
   if (err) {
     console.log("Private key not found!");
@@ -43,7 +97,21 @@ fs.readFile(__dirname + '/crypto/public.pem', 'utf8', function (err,data) {
   console.log("Public key loaded.");
 });
 
- // App Stuff
+// TODO: Discovery service.
+fs.readFile(__dirname + '/config/sisters.json', 'utf8', function(err,data) {
+  if(err) throw err;
+  sisters = JSON.parse(data);
+});
+
+// Load a schema by which to validate
+fs.readFile(__dirname + '/schema/schema.json', 'utf8', function(err,data) {
+  if(err) throw err;
+  schema = JSON.parse(data);
+});
+
+/*
+  Web API
+*/
 app.use('/public', express.static(__dirname + '/public'));
 app.use(express.bodyParser()); //nicer POST
 app.listen(config.port);
@@ -76,13 +144,23 @@ app.post('/new', function(req, res){
 
     if (!validation.valid){
       console.log(validation.errors);
+
+      // Log the error.
+      db.save('error', validation.errors, function (err, res) {
+      if (err) {
+          // Something is very, very wrong if you get here.
+      } else {
+         console.log('Failed submission attempt saved.');
+            }
+      });
+
       return res.send("You sent some invalid data.");
     }
 
     /*
       Sign
     */
-    var signer = crypto.createSign(config.signatureAlgorithm); //Signers can only be used once, so make a new one.
+    var signer = crypto.createSign(config.signatureAlgorithm); // Signers can only be used once, so make a new one.
     signer.update(JSON.stringify(metadata)); // Feed it
     var signature = signer.sign(privateKey, 'base64'); // Signer is now spent.
     metadata['signature'] = signature; // Attach it.
@@ -100,16 +178,22 @@ app.post('/new', function(req, res){
              //XXX Share.
           }
       });
-
     /*
       Share
     */
 
+    for(var key in sisters.sisters){
+        console.log(key);
+        if (sisters.sisters.hasOwnProperty(key)) {
+          console.log(key + " -> " + sisters.sisters[key]['port']);
+        }
+        duplicateNotarization(sisters.sisters[key], metadata);
+    }
 
     // Return response
     res.send(req.body);
-});
 
+});
 
 // Verify and store a duplicate from a sister server.
 app.post('/duplicate', function(req, res){
@@ -139,13 +223,13 @@ app.get('/', function (req, res) {
   res.render(__dirname + '/html/index.html', {domain: config.siteDomain});
 });
 
-
 // DB Stuff
 db.exists(function (err, exists) {
   if (err) {
     console.log('error', err);
   } else if (exists) {
-    console.log('Database exists..');
+    console.log('Database exists, hooray!');
+    console.log('Party started..\n');
   } else {
     console.log('No database. Creating one..');
     db.create();
@@ -155,10 +239,3 @@ db.exists(function (err, exists) {
 
 // Sharing
 
-// Validation stuff
-
-// Load a schema by which to validate
-fs.readFile(__dirname + '/schema/schema.json', 'utf8', function(err,data) {
-  if(err) throw err;
-  schema = JSON.parse(data);
-});

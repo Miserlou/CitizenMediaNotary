@@ -26,9 +26,14 @@
             "optional": false,
             "format": "date-time"
         },
+        "description": {
+            "description": "Description of the file.",
+            "type": "string",
+            "optional": true
+        },
         "size": {
             "description": "Size of file, in bytes.",
-            "type": "float",
+            "type": "string",
             "optional": false
         },
         "latitude": {

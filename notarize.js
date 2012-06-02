@@ -6,6 +6,8 @@ var fs = require('fs');
 var crypto = require('crypto');
 var path = require("path");
 var util = require('util');
+var querystring = require('querystring');  
+var http = require('http'); 
 
 var argv = require('optimist')
     .usage('Notarize a file with the CitizenMediaNotary network.')
@@ -13,38 +15,89 @@ var argv = require('optimist')
     .alias('f', 'file')
     .describe('f', 'File to notarize')
     .demand('n')
-    .default('n', 'http://localhost:2000/new')
+    .default('n', 'localhost')
     .alias('n', 'notary')
     .describe('n', 'Notary to use')
+	.default('p', '2000')
+    .alias('p', 'port')
+    .describe('p', 'Notary port')
     .alias('d', 'description')
     .describe('d', 'A description of the file being notarized')
     .argv
 ;
 
-var data=[]; //TODO actually use this.
+var data={}; // TODO actually use this.
 
 // Simple utility that doesn't error out when the file doesn't exist
 // and returns the size    
-function getSize(filename, callback) {
-  fs.stat(filename,( function (err, stat) {
-      console.log('Size: ', stat.size);
-    }));
+function getSize(filename) {
+  stat = fs.statSync(filename);
+  return stat.size;
 }
 
 var sha1sum = crypto.createHash('sha1');
 
-var s = fs.ReadStream(argv.file);
-s.on('data', function(d) {
-  sha1sum.update(d);
-});
+var fs = require('fs');
 
-s.on('end', function() {
+// XXX: Convert to synchronous 
 
-  var d = sha1sum.digest('hex');
-  console.log('Filename: ', argv.file.replace(/^.*[\\\/]/, ''));
-  console.log('SHA1: ', d);
+try {
+  var file_data = fs.readFileSync(argv.file, 'utf8');
+}
+catch (err) {
+  console.error("There was an error opening the file:");
+  console.log(err);
+  return;
+}
 
-});
+sha1sum.update(file_data);
+var d = sha1sum.digest('hex');
 
-getSize(argv.file);
-console.log('Time: ', new Date().getTime());
+data.filename = argv.file.replace(/^.*[\\\/]/, '');
+data.hash = d;
+data.hashAlgorithm = 'SHA1';
+data.size = getSize(argv.file);
+
+if(argv.d){
+	console.log('Description: ', argv.d);
+	data.description = argv.d;
+}
+
+host = {'address': argv.n, 'port': '2000'};
+data.time = new Date().getTime();
+sendMetadata(host, data);
+
+/*
+	Util
+*/
+
+function sendMetadata(host, data){
+
+  console.log("Sending data..");
+
+  var encoded_data = querystring.stringify(data);
+  console.log(encoded_data);
+
+  var options = {
+    host: host.address,
+    port: host.port,
+    path: '/new',
+    method: 'POST'
+  };
+
+  var req = http.request(options, function(res) {
+    res.setEncoding('utf8');
+    res.on('data', function (chunk) {
+    });
+  });
+
+  req.on('error', function(e) {
+    console.log('Problem talking to', host.address, ': ')
+    console.log(e.message);
+  });
+
+  // write data to request body
+  req.write(encoded_data);
+  req.end();
+  
+}
