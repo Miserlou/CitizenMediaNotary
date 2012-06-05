@@ -178,6 +178,7 @@ app.post('/new', function(req, res){
              //XXX Share.
           }
       });
+
     /*
       Share
     */
@@ -220,7 +221,7 @@ app.get('/verify/:hash', function (req, res) {
 
 // Homepage
 app.get('/', function (req, res) {
-  res.render(__dirname + '/html/index.html', {domain: config.siteDomain});
+  res.render(__dirname + '/html/home.html', {domain: config.siteDomain});
 });
 
 // DB Stuff

@@ -1,12 +1,12 @@
 {
     "sisters": {
         "localhost": {
-        	"address": "localhost",
+            "address": "localhost",
             "port": "2000",
             "publicKey": "abcdefg"
         },
         "lectureleaks.pagekite.me": {
-        	"address": "lectureleaks.pagekite.me",
+            "address": "lectureleaks.pagekite.me",
             "port": "2000",
             "publicKey": "abcdefg"
         }

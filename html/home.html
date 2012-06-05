@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Citizen Media Notary</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="/public/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <link href="/public/css/bootstrap-responsive.css" rel="stylesheet">
+    <style scoped="" spellcheck="off" contenteditable="">
+    .grad {
+        /* fallback */
+        background-color: #ffffff;
+        background: #ffffff;
+        
+        /* Safari 4-5, Chrome 1-9 */
+        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FAFAFF), to(#ffffff));
+        
+        /* Safari 5.1, Chrome 10+ */
+        background: -webkit-linear-gradient(top, #FAFAFF, #ffffff);
+        
+        /* Firefox 3.6+ */
+        background: -moz-linear-gradient(top, #FAFAFF, #ffffff);
+        
+        /* IE 10 */
+        background: -ms-linear-gradient(top, #FAFAFF, #ffffff);
+        
+        /* Opera 11.10+ */
+        background: -o-linear-gradient(top, #FAFAFF, #ffffff);
+      }</style>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/public/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/public/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/public/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/public/ico/apple-touch-icon-57-precomposed.png">
+  </head>
+
+  <body class="grad">
+
+    <div class="container">
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit" style="background-color: none; background: none;">
+        <center><h1>Citizen Media Notary</h1></center><br />
+        <p><b>CitizenMediaNotary</b> is a distributed network of servers which temporally verify the authenticity of documents as they are produced. Our goal is to help citizens, documentarians, lawyers, publishers, authors, businesses and consumers <i>temporally</i> and <i>cryptographically</i> prove the authenticy of the documents they produce.</p><br />
+        <p><center><form action="/verify/" id="search" method="get"><input id="hash" name="hash" class="input-xlarge" type="text" placeholder="Enter a hash or filename.." /> <input type="submit" class="btn btn-success btn-large" onclick="document.search.submit()" value="Search! &raquo;" /></p></center>
+      </div>
+
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span4">
+          <h2>How?</h2>
+           <p>Whenever a new document is produced and presented to the network, a record of the fingerprint of that document is verified, stored, signed, and distributed around the globe to the rest of the network for verification.</p>
+           <p>To assess the history of a document, search for the name or cryptographic hash of the file, and you'll get the network's record for that file, thus proving the record's temporal authenticity.</p>
+           <p><a class="btn" href="http://github.com/Miserlou/CitizenMediaNotary">Learn more.. &raquo;</a></p>
+        </div>
+        <div class="span4">
+          <h2>Who Can Use It?</h2>
+           <p>CitizenMediaNotary can be used by anybody who wants the media they produce to be verified.
+           <ul>
+            <li>Citizen Documentarians, who want to use their recordings in news articles</li>
+            <li>Lawyers, who want to prove the authenticy of their evidence in court</li>
+            <li>Businesses, who want to prove a record of their contracts</li>
+            <li>Officials, who want to verify their public record</li>
+          </ul>
+           </p>
+           <p>CMN is filetype agnostic, so it can work for lots of things, like..
+           <ul>
+            <li>Cell phone audio/video recordings</li>
+            <li>Emails / Chat and IRC Logs</li>
+            <li>Contracts</li>
+            <li>Published Articles</li>
+          </ul>
+           </p>
+       </div>
+        <div class="span4">
+          <h2>More Information</h2>
+          <p><b>CMN</b> is developed by <a href="http://openwatch.net">The OpenWatch Project</a> for use with our citizen media software (in conjunction with the <b>National Lawyers Guild</b> and the <b>ACLU</b>), but it can be used for a variety of purposes. <br /><br />If you're interested in integrating your software with CMN or are interested in running a notary and becoming part of the CMN network, please click below to get more information.</p>
+          <p><a class="btn" href="http://github.com/Miserlou/CitizenMediaNotary">Find out more.. &raquo;</a></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>Server ID: <i>notary.gun.io</i></p>
+        <p><b>CitizenMediaNotary</b> is Free and Open Source software. <a href="http://github.com/Miserlou/CitizenMediaNotary">Fork me</a>! :)</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/public/js/jquery.js"></script>
+    <script src="/public/js/bootstrap-transition.js"></script>
+    <script src="/public/js/bootstrap-alert.js"></script>
+    <script src="/public/js/bootstrap-modal.js"></script>
+    <script src="/public/js/bootstrap-dropdown.js"></script>
+    <script src="/public/js/bootstrap-scrollspy.js"></script>
+    <script src="/public/js/bootstrap-tab.js"></script>
+    <script src="/public/js/bootstrap-tooltip.js"></script>
+    <script src="/public/js/bootstrap-popover.js"></script>
+    <script src="/public/js/bootstrap-button.js"></script>
+    <script src="/public/js/bootstrap-collapse.js"></script>
+    <script src="/public/js/bootstrap-carousel.js"></script>
+    <script src="/public/js/bootstrap-typeahead.js"></script>
+
+  </body>
+</html>
