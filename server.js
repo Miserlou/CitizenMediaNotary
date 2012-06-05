@@ -219,6 +219,12 @@ app.get('/verify/:hash', function (req, res) {
 
 });
 
+// My public key.
+app.get('/key', function (req, res) {
+  res.send(publicKey);
+
+});
+
 // Homepage
 app.get('/', function (req, res) {
   res.render(__dirname + '/html/home.html', {domain: config.siteDomain});
