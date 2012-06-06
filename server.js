@@ -225,6 +225,11 @@ app.get('/key', function (req, res) {
 
 });
 
+app.get('/sisters', function (req, res) {
+  res.send(sisters);
+
+});
+
 // Homepage
 app.get('/', function (req, res) {
   res.render(__dirname + '/html/home.html', {domain: config.siteDomain});

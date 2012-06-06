@@ -58,6 +58,7 @@
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit" style="background-color: none; background: none;">
         <center><h1>Citizen Media Notary</h1></center><br />
+        <p>This server is a <b>Citizen Media Notary</b>.</p>
         <p><b>CitizenMediaNotary</b> is a distributed network of servers which temporally verify the authenticity of documents as they are produced. Our goal is to help citizens, documentarians, lawyers, publishers, authors, businesses and consumers <i>temporally</i> and <i>cryptographically</i> prove the authenticy of the documents they produce.</p><br />
         <p><center><form action="/verify/" id="search" method="get"><input id="hash" name="hash" class="input-xlarge" type="text" placeholder="Enter a hash or filename.." /> <input type="submit" class="btn btn-success btn-large" onclick="document.search.submit()" value="Search! &raquo;" /></p></center>
       </div>
@@ -67,22 +68,33 @@
         <div class="span4">
           <h2>How?</h2>
            <p>Whenever a new document is produced and presented to the network, a record of the fingerprint of that document is verified, stored, signed, and distributed around the globe to the rest of the network for verification.</p>
+           <p><a href="/public/images/diag.png" rel="lightbox" title="A sketch of the CitizenMediaNotary network in action."><img src="/public/images/diag.png" /></a>
            <p>To assess the history of a document, search for the name or cryptographic hash of the file, and you'll get the network's record for that file, thus proving the record's temporal authenticity.</p>
            <p><a class="btn" href="http://github.com/Miserlou/CitizenMediaNotary">Learn more.. &raquo;</a></p>
         </div>
         <div class="span4">
-          <h2>Who Can Use It?</h2>
-           <p>CitizenMediaNotary can be used by anybody who wants the media they produce to be verified.
-           <ul>
-            <li>Citizen Documentarians, who want to use their recordings in news articles</li>
-            <li>Lawyers, who want to prove the authenticy of their evidence in court</li>
-            <li>Businesses, who want to prove a record of their contracts</li>
-            <li>Officials, who want to verify their public record</li>
-          </ul>
+          <h2>Who Should Use It?</h2>
+           <p>CitizenMediaNotary can be used by anybody who wants the media they produce to be authenticated and verifable.
+            <dl>
+              <dt>Citizen Documentarians</dt>
+                  <dd>..who want to verify their recordings.</dd>
+              <dt>Journalists</dt>
+                  <dd>..who want to ensure that their readers can read uncensored versions of their articles.</dd>
+              <dt>Lawyers</dt>
+                  <dd>..who want to prove the authenticy of their evidence in court.</dd>
+              <dt>Developers</dt>
+                <dd>..who want to verify their binary and source packages to their users.</dd>
+              <dt>Businesses</dt> 
+                  <dd>..Who want to prove a record of their contracts.</dd>
+              <dt>Officials</dt>
+                <dd>..who want to verify their public record.</dd>
+
+            </dl>
            </p>
            <p>CMN is filetype agnostic, so it can work for lots of things, like..
            <ul>
             <li>Cell phone audio/video recordings</li>
+            <li>Binary and source packages</li>
             <li>Emails / Chat and IRC Logs</li>
             <li>Contracts</li>
             <li>Published Articles</li>
@@ -91,7 +103,16 @@
        </div>
         <div class="span4">
           <h2>More Information</h2>
-          <p><b>CMN</b> is developed by <a href="http://openwatch.net">The OpenWatch Project</a> for use with our citizen media software (in conjunction with the <b>National Lawyers Guild</b> and the <b>ACLU</b>), but it can be used for a variety of purposes. <br /><br />If you're interested in integrating your software with CMN or are interested in running a notary and becoming part of the CMN network, please click below to get more information.</p>
+          <p><center><a href="/public/images/openwatch.png" rel="lightbox" title="The OpenWatch Project."><img src="/public/images/openwatch.png" width="75%"/></a></center></p>
+          <p><b>CMN</b> is developed by <a href="http://openwatch.net">The OpenWatch Project</a> for use with our citizen media software (in conjunction with the <b>National Lawyers Guild</b> and the <b>ACLU</b>), but it can be used for a variety of purposes.</p>
+          <dl>
+              <dt>API</dt>
+          </dl>
+          <p>If you're interested in integrating your software with the CitizenMediaNotary network, good news! CMN has a very simple API. <a href="http://github.com/Miserlou/CitizenMediaNotary">Find out more</a>.
+          <dl>
+              <dt>Joining the Network</dt>
+          </dl>
+          <p>If you're interested in running a notary and becoming part of the CMN network, please click below to get more information.</p>
           <p><a class="btn" href="http://github.com/Miserlou/CitizenMediaNotary">Find out more.. &raquo;</a></p>
         </div>
       </div>
@@ -99,7 +120,7 @@
       <hr>
 
       <footer>
-        <p>Server ID: <i>notary.gun.io</i>. Check out my <a href="/key">public key</a>.</p>
+        <p>Server ID: <i>${domain}</i>. Check out my <a href="/key">public key</a> and my <a href="/sisters">sisters</a>.</p> 
         <p><b>CitizenMediaNotary</b> is Free and Open Source software. <a href="http://github.com/Miserlou/CitizenMediaNotary">Fork me</a>! :)</p>
       </footer>
 
@@ -121,6 +142,9 @@
     <script src="/public/js/bootstrap-collapse.js"></script>
     <script src="/public/js/bootstrap-carousel.js"></script>
     <script src="/public/js/bootstrap-typeahead.js"></script>
+
+    <script src="/public/js/lightbox.js"></script>
+    <link href="/public/css/lightbox.css" rel="stylesheet" />
 
   </body>
 </html>
