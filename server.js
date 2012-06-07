@@ -24,7 +24,7 @@ var sisters;
 
 // DB Requirements
 var cradle = require('cradle');
-var db = new(cradle.Connection)().database('notary');
+var db = new(cradle.Connection)().database(config.tableName);
 
 // Validation requirements
 var sys = require('util'), fs = require('fs');
@@ -38,41 +38,6 @@ var verifier = crypto.createVerify(config.signatureAlgorithm);
 
 var publicKey;
 var privateKey;
-
-/*
-  Functions
-*/
-
-function duplicateNotarization(host, data){
-
-  console.log(host.port);
-  console.log(host.address);
-
-  var encoded_data = querystring.stringify(data);
-
-  var options = {
-    host: host.address,
-    port: host.port,
-    path: '/duplicate',
-    method: 'POST'
-  };
-
-  var req = http.request(options, function(res) {
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-    });
-  });
-
-  req.on('error', function(e) {
-    console.log('Problem talking to', host.address, ': ')
-    console.log(e.message);
-  });
-
-  // write data to request body
-  req.write(encoded_data);
-  req.end();
-  
-}
 
 /*
   Load local resources.
@@ -107,6 +72,22 @@ fs.readFile(__dirname + '/config/sisters.json', 'utf8', function(err,data) {
 fs.readFile(__dirname + '/schema/schema.json', 'utf8', function(err,data) {
   if(err) throw err;
   schema = JSON.parse(data);
+});
+
+/*
+  Set up/confirm database.
+*/
+db.exists(function (err, exists) {
+  if (err) {
+    console.log('error', err);
+  } else if (exists) {
+    console.log('Database exists, hooray!');
+    console.log('Party started..\n');
+  } else {
+    console.log('No database. Creating one..');
+    db.create();
+    // It crashes here the first time. Wtf.
+  }
 });
 
 /*
@@ -200,6 +181,7 @@ app.post('/new', function(req, res){
 app.post('/duplicate', function(req, res){
 
     // Verify and store duplicate
+    console.log(req);
 
     // Return response
     res.send(req.body);
@@ -235,19 +217,41 @@ app.get('/', function (req, res) {
   res.render(__dirname + '/html/home.html', {domain: config.siteDomain});
 });
 
-// DB Stuff
-db.exists(function (err, exists) {
-  if (err) {
-    console.log('error', err);
-  } else if (exists) {
-    console.log('Database exists, hooray!');
-    console.log('Party started..\n');
-  } else {
-    console.log('No database. Creating one..');
-    db.create();
-    // It crashes here the first time. Wtf.
-  }
-});
+/*
+  Utility Functions
+*/
+
+function duplicateNotarization(host, data){
+
+  console.log(host.port);
+  console.log(host.address);
+
+  var encoded_data = querystring.stringify(data);
+
+  var options = {
+    host: host.address,
+    port: host.port,
+    path: '/duplicate',
+    method: 'POST'
+  };
+
+  var req = http.request(options, function(res) {
+    res.setEncoding('utf8');
+    res.on('data', function (chunk) {
+    });
+  });
+
+  req.on('error', function(e) {
+    console.log('Problem talking to', host.address, ': ')
+    console.log(e.message);
+  });
+
+  // write data to request body
+  req.write(encoded_data);
+  req.end();
+  
+}
+
 
 // Sharing
 

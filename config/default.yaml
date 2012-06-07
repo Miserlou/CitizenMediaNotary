@@ -1,4 +1,5 @@
 Server:
   siteDomain: localhost
   port: 2000
-  signatureAlgorithm: RSA-SHA256 
+  tableName: notary
+  signatureAlgorithm: RSA-SHA256
