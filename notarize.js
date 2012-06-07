@@ -18,7 +18,7 @@ var argv = require('optimist')
     .default('n', 'localhost')
     .alias('n', 'notary')
     .describe('n', 'Notary to use')
-	.default('p', '2000')
+	  .default('p', '2000')
     .alias('p', 'port')
     .describe('p', 'Notary port')
     .alias('d', 'description')
@@ -63,7 +63,7 @@ if(argv.d){
 	data.description = argv.d;
 }
 
-host = {'address': argv.n, 'port': '2000'};
+host = {'address': argv.n, 'port': argv.p};
 data.time = new Date().getTime();
 sendMetadata(host, data);
 
