@@ -11,7 +11,6 @@ var http = require('http');
 
 var argv = require('optimist')
     .usage('Notarize a file with the CitizenMediaNotary network.')
-    .demand('f')
     .alias('f', 'file')
     .describe('f', 'File to notarize')
     .demand('n')
@@ -23,6 +22,10 @@ var argv = require('optimist')
     .describe('p', 'Notary port')
     .alias('d', 'description')
     .describe('d', 'A description of the file being notarized')
+    .alias('v', 'verify')
+    .describe('v', 'Verify a file against the CMN network. Requires --file, unless used with --self.')
+    .alias('s', 'self')
+    .describe('s', 'Verify this client with the CMN network. Requires --verify.')
     .argv
 ;
 
@@ -39,10 +42,26 @@ var sha1sum = crypto.createHash('sha1');
 
 var fs = require('fs');
 
+if (!argv.file && !argv.verify){
+  require('optimist').showHelp();
+  return;
+}
+
+if(argv.verify && argv.self){
+  argv.file = __filename;
+}
+
+if (!argv.file && argv.verify){
+  require('optimist').showHelp();
+  return;
+}
+
+
+
 // XXX: Convert to synchronous 
 
 try {
-  var file_data = fs.readFileSync(argv.file, 'utf8');
+  var file_data = fs.readFileSync(argv.file, 'binary');
 }
 catch (err) {
   console.error("There was an error opening the file:");

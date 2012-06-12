@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Upload a File - Citizen Media Notary</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="/public/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <link href="/public/css/bootstrap-responsive.css" rel="stylesheet">
+    <style scoped="" spellcheck="off" contenteditable="">
+    .grad {
+        /* fallback */
+        background-color: #ffffff;
+        background: #ffffff;
+        
+        /* Safari 4-5, Chrome 1-9 */
+        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FAFAFF), to(#ffffff));
+        
+        /* Safari 5.1, Chrome 10+ */
+        background: -webkit-linear-gradient(top, #FAFAFF, #ffffff);
+        
+        /* Firefox 3.6+ */
+        background: -moz-linear-gradient(top, #FAFAFF, #ffffff);
+        
+        /* IE 10 */
+        background: -ms-linear-gradient(top, #FAFAFF, #ffffff);
+        
+        /* Opera 11.10+ */
+        background: -o-linear-gradient(top, #FAFAFF, #ffffff);
+      }</style>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/public/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/public/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/public/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/public/ico/apple-touch-icon-57-precomposed.png">
+  </head>
+
+  <body class="grad">
+
+    <div class="container">
+
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span10">
+          <h1>Upload a File</h1>
+           <p></p>
+           <p>To notarize a document using your browser, simply choose a file and press submit!</p>
+           <p>The file will be fingerprinted and notarized, but not stored.
+           <p><form action="/upload" id="search" method="post" enctype="multipart/form-data" >
+                <input id="hash" name="uploadfile" class="input-xlarge" type="file" placeholder="Enter a hash or filename.." /> 
+                <input type="submit" class="btn btn-success btn-large" onclick="document.search.submit()" value="Upload! &raquo;" />
+              </form>
+        </div>
+       </div>
+
+      <div class="row">
+        <div class="span10">
+          <h3>Command Line Clients</h3>
+          <p>
+           <p>The CMN network can also be used via a command-line client.</p>
+           <p>To install it, simply</p>
+           <p><code>
+                  npm install notarize -g
+              </code>
+            </p>
+           <p><i>notarize</i> will explain itself when called without any parameters.</p>
+           <p><code>
+                  notarize 
+              </code>
+            </p>
+           <p>To notarize a document, provide a description and a file's address.</p>
+           <p><code>
+                  notarize --description "Town hall meeting notes." --file notes.odt
+              </code>
+            </p>
+           <p>You can verify the history of a document by using the --verify parameter.</p>
+           <p><code>
+                  notarize --verify -f notes.odt
+              </code>
+            </p>
+           <p>As a bonus, notarize <a href="/verify/XXX_CHANGE_ME_XXX">can verify</a> itself.
+            <p><code>
+                  notarize --verify --self 
+              </code>
+            </p>
+           <p>
+                  Hooray! You did it!
+            </p>
+        </div>
+       </div>
+
+      <hr>
+
+      <footer>
+        <div class="row">
+          <div class="span5">
+          <p>Server ID: <i>${domain}</i>. Check out my <a href="/key">public key</a> and my <a href="/sisters">sisters</a>.</p> 
+          <p><b>CitizenMediaNotary</b> is Free and Open Source software. <a href="http://github.com/Miserlou/CitizenMediaNotary">Fork me</a>! :)</p>
+          </div>
+          <div class="span2 offset5"><p><code>npm install notarize</code></p></div>
+        </div>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/public/js/jquery.js"></script>
+    <script src="/public/js/bootstrap-transition.js"></script>
+    <script src="/public/js/bootstrap-alert.js"></script>
+    <script src="/public/js/bootstrap-modal.js"></script>
+    <script src="/public/js/bootstrap-dropdown.js"></script>
+    <script src="/public/js/bootstrap-scrollspy.js"></script>
+    <script src="/public/js/bootstrap-tab.js"></script>
+    <script src="/public/js/bootstrap-tooltip.js"></script>
+    <script src="/public/js/bootstrap-popover.js"></script>
+    <script src="/public/js/bootstrap-button.js"></script>
+    <script src="/public/js/bootstrap-collapse.js"></script>
+    <script src="/public/js/bootstrap-carousel.js"></script>
+    <script src="/public/js/bootstrap-typeahead.js"></script>
+
+    <script src="/public/js/lightbox.js"></script>
+    <link href="/public/css/lightbox.css" rel="stylesheet" />
+
+  </body>
+</html>

@@ -60,7 +60,7 @@
         <center><h1>Citizen Media Notary</h1></center><br />
         <p>This server is a <b>Citizen Media Notary</b>.</p>
         <p><b>CitizenMediaNotary</b> is a distributed network of servers which temporally verify the authenticity of documents as they are produced. Our goal is to help citizens, documentarians, lawyers, publishers, authors, businesses and consumers <i>temporally</i> and <i>cryptographically</i> prove the authenticy of the documents they produce.</p><br />
-        <p><center><form action="/verify/" id="search" method="get"><input id="hash" name="hash" class="input-xlarge" type="text" placeholder="Enter a hash or filename.." /> <input type="submit" class="btn btn-success btn-large" onclick="document.search.submit()" value="Search! &raquo;" /></p></center>
+        <p><center><form class="form-inline" action="/verify/" id="search" method="get"><input id="hash" name="hash" class="input-xlarge" type="text" placeholder="Enter a hash or filename.." /> <input type="submit" class="btn btn-success btn-large" onclick="window.location=window.location + 'verify/' + document.getElementById('hash').value; return false;" value="Search! &raquo;" /> <a class="btn btn-primary btn-large" href="/upload">Notarize a file &raquo;</a></p></center>
       </div>
 
       <!-- Example row of columns -->
@@ -116,12 +116,23 @@
           <p><a class="btn" href="http://github.com/Miserlou/CitizenMediaNotary">Find out more.. &raquo;</a></p>
         </div>
       </div>
+      <div class="row">
+        <div class="span12">
+          <h2>Jobs</h2>
+					<p><script id="gunio_search" data-search="html5" data-ref-id="asdfasdf12345" src="http://localhost:8000/static/embed/gunio.js"></script> </p>
+        </div>
+      </div>
 
       <hr>
 
       <footer>
-        <p>Server ID: <i>${domain}</i>. Check out my <a href="/key">public key</a> and my <a href="/sisters">sisters</a>.</p> 
-        <p><b>CitizenMediaNotary</b> is Free and Open Source software. <a href="http://github.com/Miserlou/CitizenMediaNotary">Fork me</a>! :)</p>
+        <div class="row">
+          <div class="span5">
+          <p>Server ID: <i>${domain}</i>. Check out my <a href="/key">public key</a> and my <a href="/sisters">sisters</a>.</p> 
+          <p><b>CitizenMediaNotary</b> is Free and Open Source software. <a href="http://github.com/Miserlou/CitizenMediaNotary">Fork me</a>! :)</p>
+          </div>
+          <div class="span2 offset5"><p><code>npm install notarize</code></p></div>
+        </div>
       </footer>
 
     </div> <!-- /container -->

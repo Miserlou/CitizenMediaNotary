@@ -1,6 +1,6 @@
 {
-  "name": "citzenmedianotary",
-  "description": "Verified Citizen Media",
+  "name": "citizenmedianotary",
+  "description": "Citizen Media Notary server.",
   "author": "Rich Jones <rich@gun.io>",
   "version": "0.0.1",
   "dependencies": {
@@ -9,7 +9,7 @@
     "express": "x.x.x",
     "yaml": "x.x.x",
     "commonjs-utils": "x.x.x",
-    "jqtpl": "1.1.x",
+    "jqtpl": "1.1.x"
   },
   "engine": "node >= 0.6.0"
 }
