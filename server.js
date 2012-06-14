@@ -106,7 +106,18 @@ app.post('/new', function(req, res){
     /*
       Validate
     */
-    metadata = req.body;
+
+    var metadata;
+
+    // Attempt to parse input, reply with error message upon exception.
+    try{
+        metadata = JSON.parse(req.body);
+    }catch(e){
+        console.log('Received invalid request.');
+        res.send("Unable to parse your submission! " + e);
+        return;
+    }
+
     metadata['storeTime'] = new Date().getTime();
 
     //Get remote address
