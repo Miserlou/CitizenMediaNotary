@@ -225,7 +225,7 @@ app.get('/verify/:hash', function (req, res) {
   db.get(req.params.hash, 
      function (err, doc) {
         if (err) {
-            res.send("We have no record for a file of with that hash.");
+            res.render(__dirname + '/html/tryagain.html', {domain: config.siteDomain});
         } else {
             res.render(__dirname + '/html/verify.html', {domain: config.siteDomain, metadata: doc});
         }

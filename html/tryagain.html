@@ -57,53 +57,22 @@
 
       <div class="row">
         <div class="span4">
-          <p><div class="alert alert-success">
+          <p><div class="alert alert-danger">
                 <p>
-                <p><b>Verified!</b> We have a public record for that file.
+                <p><b>No record found.</b> We have have no public record for that file. :(
               </div>
         </div>
       </div>
 
-      <div class="row">
+            <div class="row">
         <div class="span10">
-          <h1>File Verification</h1>
           <p>
-          <p><b>${metadata.filename}</b> was first seen on <i>${metadata.time}</i> by <i>${metadata.host}</i>. It came from ${metadata.remoteAddress}.
-          <h3>Complete Record</h3>   
-        </div>
-      </div>
-           
-      <div class="row">
-        <div class="span10 offset1">
-            
-            <p>
-              <table class="table table-striped" style="overflow: auto; word-wrap: break-word; background: #ffffff">
-              <thead>
-                <tr>
-                <th>Attribute</th>
-                <th style="width: 10%;">Value</th>
-                </tr>
-              </thead>
-              <tbody>
+                <p>
+                <p>You can keep trying though!
 
-                {{each(key, value) metadata}}
-                 <tr>
-                    <td style="width: 10%; max-width: 100px;"><b>${key}</b></td>
-                    <td style="width: 10%; max-width: 400px;">${value}</td>
-                 </tr>
-                {{/each}}
+<form class="form-inline" action="/verify/" id="search" method="get"><input id="hash" name="hash" class="input-xlarge" type="text" placeholder="Enter a hash or filename.." /> <input type="submit" class="btn btn-success btn-large" onclick="window.location=window.location + '/../' + document.getElementById('hash').value; return false;" value="Search! &raquo;" /> <a class="btn btn-primary btn-large" href="/upload">Notarize a file &raquo;</a></p>
 
-              </tbody>
-              </table>
-            </p>
-        </div>
-       </div>
 
-      <div class="row">
-        <div class="span10">
-          <h3>View as JSON</h3>
-          <p>
-          <p>You can also <a href="/verify/json/${metadata.hash}">view this as raw JSON</a>.
         </div>
       </div>
 
