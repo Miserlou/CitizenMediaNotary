@@ -9,6 +9,8 @@ var util = require('util');
 var querystring = require('querystring');  
 var http = require('http'); 
 
+var request = require('request');
+
 var argv = require('optimist')
     .usage('Notarize a file with the CitizenMediaNotary network.')
     .alias('f', 'file')
@@ -84,6 +86,7 @@ if(argv.d){
 
 host = {'address': argv.n, 'port': argv.p};
 data.time = new Date().getTime();
+
 sendMetadata(host, data);
 
 /*
@@ -94,9 +97,6 @@ function sendMetadata(host, data){
 
   console.log("Sending data..");
 
-  var encoded_data = querystring.stringify(data);
-  console.log(encoded_data);
-
   var options = {
     host: host.address,
     port: host.port,
@@ -104,19 +104,48 @@ function sendMetadata(host, data){
     method: 'POST'
   };
 
-  var req = http.request(options, function(res) {
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-    });
-  });
+  var encoded_data=JSON.stringify(data);
+  console.log(encoded_data);
 
-  req.on('error', function(e) {
-    console.log('Problem talking to', host.address, ': ')
-    console.log(e.message);
-  });
+  request(
+    { method: 'POST'
+    , uri: "http://localhost:2000/new"
+    , json: encoded_data
+    }
+
+  , function (error, response, body) {
+      if(response.statusCode == 200){
+        console.log('Hooray');
+        console.log(body);
+      } else {
+        console.log('error: '+ response.statusCode);
+        console.log(body);
+      }
+    }
+  )
+
+// request.post({
+//         headers: {'content-type' : 'application/x-www-form-urlencoded'},
+//         url: host.address,
+//         port: host.port,
+//         body: "mes=heydude"
+//         }, function(error, response, body){
+//           console.log(body);
+//     });
+
+  // var req = http.request(options, function(res) {
+  //   res.setEncoding('utf8');
+  //   res.on('data', function (chunk) {
+  //   });
+  // });
+
+  // req.on('error', function(e) {
+  //   console.log('Problem talking to', host.address, ': ')
+  //   console.log(e.message);
+  // });
 
   // write data to request body
-  req.write(encoded_data);
-  req.end();
+  // req.write(encoded_data);
+  // req.end();
   
 }
