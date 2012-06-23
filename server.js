@@ -17,6 +17,7 @@ var app = require('express').createServer()
 
 var querystring = require('querystring');  
 var http = require('http'); 
+var request = require('request');
 
 // Load the config file,
 var config = require('config').Server;
@@ -158,6 +159,8 @@ app.post('/new', function(req, res){
     /*
       Store
     */
+
+    // Bummer this isn't sync
     db.save(signed_metadata['hash'], signed_metadata, function (err, res) {
           if (err) {
               // TODO. Handle error
@@ -165,37 +168,44 @@ app.post('/new', function(req, res){
               console.log(err);
           } else {
              console.log('Entry saved.');
-             //XXX Share.
+
+              /*
+                Share
+              */
+
+              for(var sister in sisters.sisters){
+                  console.log(sister);
+                  if (sisters.sisters.hasOwnProperty(sister)) {
+                    console.log(sister + " -> " + sisters.sisters[sister]['port']);
+                  }
+                  duplicateNotarization(sisters.sisters[sister], signed_metadata);
+              }
+
+
           }
       });
 
-    /*
-      Share
-    */
-
-    for(var sister in sisters.sisters){
-        console.log(sister);
-        if (sisters.sisters.hasOwnProperty(sister)) {
-          console.log(sister + " -> " + sisters.sisters[sister]['port']);
-        }
-        duplicateNotarization(sisters.sisters[sister], signed_metadata);
-    }
-
-    // Return response
-    res.send(req.body);
+  // Return response
+  res.send(req.body);
 
 });
 
 // Verify and store a duplicate from a sister server.
 app.post('/duplicate', function(req, res){
 
-    console.log("Body..");
-    console.log(req.body);
-
     /*
       Validate
     */
-    metadata = req.body;
+
+    // Attempt to parse input, reply with error message upon exception.
+    try{
+        metadata = JSON.parse(req.body);
+    }catch(e){
+        console.log('Received invalid request.');
+        res.send("Unable to parse your submission! " + e);
+        return;
+    }
+
     metadata['storeTime'] = new Date().getTime();
 
     //Get remote address
@@ -250,7 +260,7 @@ app.get('/verify/json/:hash', function (req, res) {
   db.get(req.params.hash, 
      function (err, doc) {
         if (err) {
-            res.send("We have no record for a file of with that hash.");
+            res.send("We have no record for a file of with that hash.", 404);
         } else {
             res.send(doc);
         }
@@ -386,29 +396,25 @@ function duplicateNotarization(host, data){
   console.log(host.port);
   console.log(host.address);
 
-  var encoded_data = querystring.stringify(data);
+  var encoded_data = JSON.stringify(data);
+  console.log(encoded_data);
 
-  var options = {
-    host: host.address,
-    port: host.port,
-    path: '/duplicate',
-    method: 'POST'
-  };
+  request(
+    { method: 'POST'
+    , uri: "http://localhost:2000/duplicate"
+    , json: encoded_data
+    }
 
-  var req = http.request(options, function(res) {
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-    });
-  });
-
-  req.on('error', function(e) {
-    console.log('Problem talking to', host.address, ': ')
-    console.log(e.message);
-  });
-
-  // write data to request body
-  req.write(encoded_data);
-  req.end();
+  , function (error, response, body) {
+      if(response.statusCode == 200){
+        console.log('Hooray');
+        console.log(body);
+      } else {
+        console.log('error: '+ response.statusCode);
+        console.log(body);
+      }
+    }
+  )
   
 }
 

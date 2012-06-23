@@ -8,7 +8,8 @@ var path = require("path");
 var util = require('util');
 var querystring = require('querystring');  
 var http = require('http'); 
-
+var moment = require('moment'); 
+var color = require('cli-color'); 
 var request = require('request');
 
 var argv = require('optimist')
@@ -58,8 +59,6 @@ if (!argv.file && argv.verify){
   return;
 }
 
-
-
 // XXX: Convert to synchronous 
 
 try {
@@ -77,7 +76,7 @@ var d = sha1sum.digest('hex');
 data.filename = argv.file.replace(/^.*[\\\/]/, '');
 data.hash = d;
 data.hashAlgorithm = 'SHA1';
-data.size = getSize(argv.file);
+data.size = new String(getSize(argv.file));
 
 if(argv.d){
 	console.log('Description: ', argv.d);
@@ -85,9 +84,13 @@ if(argv.d){
 }
 
 host = {'address': argv.n, 'port': argv.p};
-data.time = new Date().getTime();
+data.time = new String(new Date().getTime());
 
-sendMetadata(host, data);
+if(!argv.verify){
+  sendMetadata(host, data);}
+else{
+  verifyMetadata(host, data);
+}
 
 /*
 	Util
@@ -95,17 +98,7 @@ sendMetadata(host, data);
 
 function sendMetadata(host, data){
 
-  console.log("Sending data..");
-
-  var options = {
-    host: host.address,
-    port: host.port,
-    path: '/new',
-    method: 'POST'
-  };
-
   var encoded_data=JSON.stringify(data);
-  console.log(encoded_data);
 
   request(
     { method: 'POST'
@@ -114,38 +107,44 @@ function sendMetadata(host, data){
     }
 
   , function (error, response, body) {
+      
+      if (error != undefined){
+        console.log('Error! ', error.code);
+        return;
+      }
+
       if(response.statusCode == 200){
-        console.log('Hooray');
-        console.log(body);
+        console.log(color.green('Document notarized!'));
       } else {
-        console.log('error: '+ response.statusCode);
+        console.log(color.red('error: '+ response.statusCode));
         console.log(body);
       }
     }
   )
+}
 
-// request.post({
-//         headers: {'content-type' : 'application/x-www-form-urlencoded'},
-//         url: host.address,
-//         port: host.port,
-//         body: "mes=heydude"
-//         }, function(error, response, body){
-//           console.log(body);
-//     });
+function verifyMetadata(host, data){
 
-  // var req = http.request(options, function(res) {
-  //   res.setEncoding('utf8');
-  //   res.on('data', function (chunk) {
-  //   });
-  // });
+  request(
+    { method: 'GET'
+    , uri: "http://localhost:2000/verify/json/" + data.hash
+    }
 
-  // req.on('error', function(e) {
-  //   console.log('Problem talking to', host.address, ': ')
-  //   console.log(e.message);
-  // });
+  , function (error, response, body) {
+      
+      if (error != undefined){
+        console.log('Error! ', error.code);
+        return;
+      }
 
-  // write data to request body
-  // req.write(encoded_data);
-  // req.end();
-  
+      if(response.statusCode == 200){
+        console.log(color.green('Document verified!'));
+        response = JSON.parse(body);
+        console.log('The local file ' + color.magenta(data.filename) + ' with fingerprint ' + color.blue(data.hash) + ' was first seen on ' + color.green(moment(response.storeTime).format("dddd, MMMM Do YYYY h:mm:ssa")) + '.');
+
+      } else {
+        console.log(color.red('We have no record for that file.'));
+      }
+    }
+  )
 }
