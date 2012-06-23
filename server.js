@@ -422,6 +422,8 @@ function signMetadata(metadata){
     var signer = crypto.createSign(config.signatureAlgorithm); // Signers can only be used once, so make a new one.
     signer.update(JSON.stringify(metadata)); // Feed it
     var signature = signer.sign(privateKey, 'base64'); // Signer is now spent.
+    console.log("MEETADATEA");
+    console.log(metadata);
     metadata['signature'] = signature; // Attach it.
     return metadata;
 }

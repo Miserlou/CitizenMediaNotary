@@ -12,6 +12,16 @@ var moment = require('moment');
 var color = require('cli-color'); 
 var request = require('request');
 
+// Crypto setup
+var verifier = crypto.createVerify('RSA-SHA256');
+fs.readFile(__dirname + '/crypto/public.pem', 'utf8', function (err,data) {
+  if (err) {
+    console.log("Public key not found!");
+    return console.log(err);
+  }
+  publicKey = data;
+});
+
 var argv = require('optimist')
     .usage('Notarize a file with the CitizenMediaNotary network.')
     .alias('f', 'file')
@@ -27,12 +37,14 @@ var argv = require('optimist')
     .describe('d', 'A description of the file being notarized')
     .alias('v', 'verify')
     .describe('v', 'Verify a file against the CMN network. Requires --file, unless used with --self.')
+    .alias('r', 'raw')
+    .describe('r', 'Show JSON raw output.')
     .alias('s', 'self')
     .describe('s', 'Verify this client with the CMN network. Requires --verify.')
     .argv
 ;
 
-var data={}; // TODO actually use this.
+var data={};
 
 // Simple utility that doesn't error out when the file doesn't exist
 // and returns the size    
@@ -79,7 +91,6 @@ data.hashAlgorithm = 'SHA1';
 data.size = new String(getSize(argv.file));
 
 if(argv.d){
-	console.log('Description: ', argv.d);
 	data.description = argv.d;
 }
 
@@ -114,7 +125,10 @@ function sendMetadata(host, data){
       }
 
       if(response.statusCode == 200){
-        console.log(color.green('Document notarized!'));
+        console.log('Document ' + color.green('notarized') + '!');
+        if(argv.r){
+          console.log(body);
+        }
       } else {
         console.log(color.red('error: '+ response.statusCode));
         console.log(body);
@@ -138,9 +152,34 @@ function verifyMetadata(host, data){
       }
 
       if(response.statusCode == 200){
-        console.log(color.green('Document verified!'));
+
         response = JSON.parse(body);
-        console.log('The local file ' + color.magenta(data.filename) + ' with fingerprint ' + color.blue(data.hash) + ' was first seen on ' + color.green(moment(response.storeTime).format("dddd, MMMM Do YYYY h:mm:ssa")) + '.');
+
+        signature = response.signature;
+        delete response.signature;
+        delete response._id;
+        delete response._rev;
+
+        verifier.update(JSON.stringify(response));
+        signed = verifier.verify(publicKey, signature, 'base64');
+
+        if(signed){
+          console.log("This document has been " + color.green('verified') + '!');
+        }
+        else{
+          console.log("This document can " + color.red("NOT been cryptographically verified") + '.');
+        }
+
+        console.log('The local file ' + color.magenta(data.filename) + ' with fingerprint ' + color.blue(data.hash) + ' was first seen on ' + color.green(moment(response.storeTime).format("dddd, MMMM Do YYYY h:mm:ssa")) + ' as ' + color.magenta(response.filename) + '.');
+        if (response.description != undefined){
+          console.log('Description: ' + color.underline(response.description));
+        }
+
+
+
+        if(argv.r){
+          console.log(JSON.stringify(response, null, 4));
+        }
 
       } else {
         console.log(color.red('We have no record for that file.'));
