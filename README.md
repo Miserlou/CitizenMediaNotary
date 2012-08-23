@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/Miserlou/CitizenMediaNotary.png)](http://travis-ci.org/Miserlou/CitizenMediaNotary)
 # Citizen Media Notary
 ![diagram](http://i.imgur.com/2fwoc.png)
 
