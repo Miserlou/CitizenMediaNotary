@@ -2,12 +2,11 @@
 // IT'S ALL JUST JUNK FOR OUR DOCS!
 // ++++++++++++++++++++++++++++++++++++++++++
 
-!function ($) {
+!($ => {
 
-  $(function(){
-
+  $(() => {
     // Disable certain links in docs
-    $('section [href^=#]').click(function (e) {
+    $('section [href^=#]').click(e => {
       e.preventDefault()
     })
 
@@ -16,14 +15,14 @@
 
     // add-ons
     $('.add-on :checkbox').on('click', function () {
-      var $this = $(this)
-        , method = $this.attr('checked') ? 'addClass' : 'removeClass'
+      var $this = $(this);
+      var method = $this.attr('checked') ? 'addClass' : 'removeClass';
       $(this).parents('.add-on')[method]('active')
     })
 
     // position static twipsies for components page
     if ($(".twipsies a").length) {
-      $(window).on('load resize', function () {
+      $(window).on('load resize', () => {
         $(".twipsies a").each(function () {
           $(this)
             .tooltip({
@@ -39,27 +38,29 @@
     if ($('#grid-system').length) {
       $('#grid-system').tooltip({
           selector: '.show-grid > div'
-        , title: function () { return $(this).width() + 'px' }
+        , title() { return $(this).width() + 'px' }
       })
     }
 
     // fix sub nav on scroll
-    var $win = $(window)
-      , $nav = $('.subnav')
-      , navTop = $('.subnav').length && $('.subnav').offset().top - 40
-      , isFixed = 0
+    var $win = $(window);
+
+    var $nav = $('.subnav');
+    var navTop = $('.subnav').length && $('.subnav').offset().top - 40;
+    var isFixed = 0;
 
     processScroll()
 
     // hack sad times - holdover until rewrite for 2.1
-    $nav.on('click', function () {
-      if (!isFixed) setTimeout(function () {  $win.scrollTop($win.scrollTop() - 47) }, 10)
+    $nav.on('click', () => {
+      if (!isFixed) setTimeout(() => {  $win.scrollTop($win.scrollTop() - 47) }, 10)
     })
 
     $win.on('scroll', processScroll)
 
     function processScroll() {
-      var i, scrollTop = $win.scrollTop()
+      var i;
+      var scrollTop = $win.scrollTop();
       if (scrollTop >= navTop && !isFixed) {
         isFixed = 1
         $nav.addClass('subnav-fixed')
@@ -80,7 +81,7 @@
     // popover demo
     $("a[rel=popover]")
       .popover()
-      .click(function(e) {
+      .click(e => {
         e.preventDefault()
       })
 
@@ -89,7 +90,7 @@
       .click(function () {
         var btn = $(this)
         btn.button('loading')
-        setTimeout(function () {
+        setTimeout(() => {
           btn.button('reset')
         }, 3000)
       })
@@ -98,65 +99,68 @@
     $('#myCarousel').carousel()
 
     // javascript build logic
-    var inputsComponent = $("#components.download input")
-      , inputsPlugin = $("#plugins.download input")
-      , inputsVariables = $("#variables.download input")
+    var inputsComponent = $("#components.download input");
+
+    var inputsPlugin = $("#plugins.download input");
+    var inputsVariables = $("#variables.download input");
 
     // toggle all plugin checkboxes
-    $('#components.download .toggle-all').on('click', function (e) {
+    $('#components.download .toggle-all').on('click', e => {
       e.preventDefault()
       inputsComponent.attr('checked', !inputsComponent.is(':checked'))
     })
 
-    $('#plugins.download .toggle-all').on('click', function (e) {
+    $('#plugins.download .toggle-all').on('click', e => {
       e.preventDefault()
       inputsPlugin.attr('checked', !inputsPlugin.is(':checked'))
     })
 
-    $('#variables.download .toggle-all').on('click', function (e) {
+    $('#variables.download .toggle-all').on('click', e => {
       e.preventDefault()
       inputsVariables.val('')
     })
 
     // request built javascript
-    $('.download-btn').on('click', function () {
-
+    $('.download-btn').on('click', () => {
       var css = $("#components.download input:checked")
             .map(function () { return this.value })
-            .toArray()
-        , js = $("#plugins.download input:checked")
-            .map(function () { return this.value })
-            .toArray()
-        , vars = {}
-        , img = ['glyphicons-halflings.png', 'glyphicons-halflings-white.png']
+            .toArray();
 
-    $("#variables.download input")
-      .each(function () {
-        $(this).val() && (vars[ $(this).prev().text() ] = $(this).val())
-      })
+      var js = $("#plugins.download input:checked")
+            .map(function () { return this.value })
+            .toArray();
+
+      var vars = {};
+      var img = ['glyphicons-halflings.png', 'glyphicons-halflings-white.png'];
+
+      $("#variables.download input")
+        .each(function () {
+          $(this).val() && (vars[ $(this).prev().text() ] = $(this).val())
+        })
 
       $.ajax({
         type: 'POST'
       , url: /\?dev/.test(window.location) ? 'http://localhost:3000' : 'http://bootstrap.herokuapp.com'
       , dataType: 'jsonpi'
       , params: {
-          js: js
-        , css: css
-        , vars: vars
-        , img: img
+          js
+        , css
+        , vars
+        , img
       }
       })
     })
   })
 
 // Modified from the original jsonpi https://github.com/benvinegar/jquery-jsonpi
-$.ajaxTransport('jsonpi', function(opts, originalOptions, jqXHR) {
+$.ajaxTransport('jsonpi', (opts, originalOptions, jqXHR) => {
   var url = opts.url;
 
   return {
-    send: function(_, completeCallback) {
-      var name = 'jQuery_iframe_' + jQuery.now()
-        , iframe, form
+    send(_, completeCallback) {
+      var name = 'jQuery_iframe_' + jQuery.now();
+      var iframe;
+      var form;
 
       iframe = $('<iframe>')
         .attr('name', name)
@@ -167,7 +171,7 @@ $.ajaxTransport('jsonpi', function(opts, originalOptions, jqXHR) {
         .attr('action', url)
         .attr('target', name)
 
-      $.each(opts.params, function(k, v) {
+      $.each(opts.params, (k, v) => {
 
         $('<input>')
           .attr('type', 'hidden')
@@ -178,7 +182,7 @@ $.ajaxTransport('jsonpi', function(opts, originalOptions, jqXHR) {
 
       form.appendTo('body').submit()
     }
-  }
+  };
 })
 
-}(window.jQuery)
+})(window.jQuery)

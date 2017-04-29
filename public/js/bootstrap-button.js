@@ -18,7 +18,7 @@
  * ============================================================ */
 
 
-!function ($) {
+!($ => {
 
   "use strict"; // jshint ;_;
 
@@ -32,10 +32,10 @@
   }
 
   Button.prototype.setState = function (state) {
-    var d = 'disabled'
-      , $el = this.$element
-      , data = $el.data()
-      , val = $el.is('input') ? 'val' : 'html'
+    var d = 'disabled';
+    var $el = this.$element;
+    var data = $el.data();
+    var val = $el.is('input') ? 'val' : 'html';
 
     state = state + 'Text'
     data.resetText || $el.data('resetText', $el[val]())
@@ -43,7 +43,7 @@
     $el[val](data[state] || this.options[state])
 
     // push to event loop to allow forms to submit
-    setTimeout(function () {
+    setTimeout(() => {
       state == 'loadingText' ?
         $el.addClass(d).attr(d, d) :
         $el.removeClass(d).removeAttr(d)
@@ -66,13 +66,13 @@
 
   $.fn.button = function (option) {
     return this.each(function () {
-      var $this = $(this)
-        , data = $this.data('button')
-        , options = typeof option == 'object' && option
+      var $this = $(this);
+      var data = $this.data('button');
+      var options = typeof option == 'object' && option;
       if (!data) $this.data('button', (data = new Button(this, options)))
       if (option == 'toggle') data.toggle()
       else if (option) data.setState(option)
-    })
+    });
   }
 
   $.fn.button.defaults = {
@@ -85,12 +85,12 @@
  /* BUTTON DATA-API
   * =============== */
 
-  $(function () {
-    $('body').on('click.button.data-api', '[data-toggle^=button]', function ( e ) {
+  $(() => {
+    $('body').on('click.button.data-api', '[data-toggle^=button]', e => {
       var $btn = $(e.target)
       if (!$btn.hasClass('btn')) $btn = $btn.closest('.btn')
       $btn.button('toggle')
     })
   })
 
-}(window.jQuery);
+})(window.jQuery);

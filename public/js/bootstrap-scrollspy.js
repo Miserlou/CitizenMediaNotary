@@ -18,7 +18,7 @@
  * ============================================================== */
 
 
-!function ($) {
+!($ => {
 
   "use strict"; // jshint ;_;
 
@@ -27,9 +27,9 @@
    * ========================== */
 
   function ScrollSpy( element, options) {
-    var process = $.proxy(this.process, this)
-      , $element = $(element).is('body') ? $(window) : $(element)
-      , href
+    var process = $.proxy(this.process, this);
+    var $element = $(element).is('body') ? $(window) : $(element);
+    var href;
     this.options = $.extend({}, $.fn.scrollspy.defaults, options)
     this.$scrollElement = $element.on('scroll.scroll.data-api', process)
     this.selector = (this.options.target
@@ -44,76 +44,76 @@
 
       constructor: ScrollSpy
 
-    , refresh: function () {
-        var self = this
-          , $targets
+    , refresh() {
+    var self = this;
+    var $targets;
 
-        this.offsets = $([])
-        this.targets = $([])
+    this.offsets = $([])
+    this.targets = $([])
 
-        $targets = this.$body
-          .find(this.selector)
-          .map(function () {
-            var $el = $(this)
-              , href = $el.data('target') || $el.attr('href')
-              , $href = /^#\w/.test(href) && $(href)
-            return ( $href
-              && href.length
-              && [[ $href.position().top, href ]] ) || null
-          })
-          .sort(function (a, b) { return a[0] - b[0] })
-          .each(function () {
-            self.offsets.push(this[0])
-            self.targets.push(this[1])
-          })
-      }
+    $targets = this.$body
+      .find(this.selector)
+      .map(function () {
+      var $el = $(this);
+      var href = $el.data('target') || $el.attr('href');
+      var $href = /^#\w/.test(href) && $(href);
+      return ( $href
+        && href.length
+        && [[ $href.position().top, href ]] ) || null
+    })
+      .sort((a, b) => a[0] - b[0])
+      .each(function () {
+        self.offsets.push(this[0])
+        self.targets.push(this[1])
+      })
+  }
 
-    , process: function () {
-        var scrollTop = this.$scrollElement.scrollTop() + this.options.offset
-          , scrollHeight = this.$scrollElement[0].scrollHeight || this.$body[0].scrollHeight
-          , maxScroll = scrollHeight - this.$scrollElement.height()
-          , offsets = this.offsets
-          , targets = this.targets
-          , activeTarget = this.activeTarget
-          , i
+    , process() {
+    var scrollTop = this.$scrollElement.scrollTop() + this.options.offset;
+    var scrollHeight = this.$scrollElement[0].scrollHeight || this.$body[0].scrollHeight;
+    var maxScroll = scrollHeight - this.$scrollElement.height();
+    var offsets = this.offsets;
+    var targets = this.targets;
+    var activeTarget = this.activeTarget;
+    var i;
 
-        if (scrollTop >= maxScroll) {
-          return activeTarget != (i = targets.last()[0])
-            && this.activate ( i )
-        }
+    if (scrollTop >= maxScroll) {
+      return activeTarget != (i = targets.last()[0])
+        && this.activate ( i )
+    }
 
-        for (i = offsets.length; i--;) {
-          activeTarget != targets[i]
-            && scrollTop >= offsets[i]
-            && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
-            && this.activate( targets[i] )
-        }
-      }
+    for (i = offsets.length; i--;) {
+      activeTarget != targets[i]
+        && scrollTop >= offsets[i]
+        && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+        && this.activate( targets[i] )
+    }
+  }
 
-    , activate: function (target) {
-        var active
-          , selector
+    , activate(target) {
+    var active;
+    var selector;
 
-        this.activeTarget = target
+    this.activeTarget = target
 
-        $(this.selector)
-          .parent('.active')
-          .removeClass('active')
+    $(this.selector)
+      .parent('.active')
+      .removeClass('active')
 
-        selector = this.selector
-          + '[data-target="' + target + '"],'
-          + this.selector + '[href="' + target + '"]'
+    selector = this.selector
+      + '[data-target="' + target + '"],'
+      + this.selector + '[href="' + target + '"]'
 
-        active = $(selector)
-          .parent('li')
-          .addClass('active')
+    active = $(selector)
+      .parent('li')
+      .addClass('active')
 
-        if (active.parent('.dropdown-menu'))  {
-          active = active.closest('li.dropdown').addClass('active')
-        }
+    if (active.parent('.dropdown-menu'))  {
+      active = active.closest('li.dropdown').addClass('active')
+    }
 
-        active.trigger('activate')
-      }
+    active.trigger('activate')
+  }
 
   }
 
@@ -123,12 +123,12 @@
 
   $.fn.scrollspy = function ( option ) {
     return this.each(function () {
-      var $this = $(this)
-        , data = $this.data('scrollspy')
-        , options = typeof option == 'object' && option
+      var $this = $(this);
+      var data = $this.data('scrollspy');
+      var options = typeof option == 'object' && option;
       if (!data) $this.data('scrollspy', (data = new ScrollSpy(this, options)))
       if (typeof option == 'string') data[option]()
-    })
+    });
   }
 
   $.fn.scrollspy.Constructor = ScrollSpy
@@ -141,11 +141,11 @@
  /* SCROLLSPY DATA-API
   * ================== */
 
-  $(function () {
+  $(() => {
     $('[data-spy="scroll"]').each(function () {
       var $spy = $(this)
       $spy.scrollspy($spy.data())
     })
   })
 
-}(window.jQuery);
+})(window.jQuery);

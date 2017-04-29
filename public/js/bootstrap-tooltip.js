@@ -19,7 +19,7 @@
  * ========================================================== */
 
 
-!function ($) {
+!($ => {
 
   "use strict"; // jshint ;_;
 
@@ -35,28 +35,28 @@
 
     constructor: Tooltip
 
-  , init: function (type, element, options) {
-      var eventIn
-        , eventOut
+  , init(type, element, options) {
+    var eventIn;
+    var eventOut;
 
-      this.type = type
-      this.$element = $(element)
-      this.options = this.getOptions(options)
-      this.enabled = true
+    this.type = type
+    this.$element = $(element)
+    this.options = this.getOptions(options)
+    this.enabled = true
 
-      if (this.options.trigger != 'manual') {
-        eventIn  = this.options.trigger == 'hover' ? 'mouseenter' : 'focus'
-        eventOut = this.options.trigger == 'hover' ? 'mouseleave' : 'blur'
-        this.$element.on(eventIn, this.options.selector, $.proxy(this.enter, this))
-        this.$element.on(eventOut, this.options.selector, $.proxy(this.leave, this))
-      }
-
-      this.options.selector ?
-        (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
-        this.fixTitle()
+    if (this.options.trigger != 'manual') {
+      eventIn  = this.options.trigger == 'hover' ? 'mouseenter' : 'focus'
+      eventOut = this.options.trigger == 'hover' ? 'mouseleave' : 'blur'
+      this.$element.on(eventIn, this.options.selector, $.proxy(this.enter, this))
+      this.$element.on(eventOut, this.options.selector, $.proxy(this.leave, this))
     }
 
-  , getOptions: function (options) {
+    this.options.selector ?
+      (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
+      this.fixTitle()
+  }
+
+  , getOptions(options) {
       options = $.extend({}, $.fn[this.type].defaults, options, this.$element.data())
 
       if (options.delay && typeof options.delay == 'number') {
@@ -69,86 +69,86 @@
       return options
     }
 
-  , enter: function (e) {
+  , enter(e) {
       var self = $(e.currentTarget)[this.type](this._options).data(this.type)
 
       if (!self.options.delay || !self.options.delay.show) return self.show()
 
       clearTimeout(this.timeout)
       self.hoverState = 'in'
-      this.timeout = setTimeout(function() {
+      this.timeout = setTimeout(() => {
         if (self.hoverState == 'in') self.show()
       }, self.options.delay.show)
     }
 
-  , leave: function (e) {
+  , leave(e) {
       var self = $(e.currentTarget)[this.type](this._options).data(this.type)
 
       if (this.timeout) clearTimeout(this.timeout)
       if (!self.options.delay || !self.options.delay.hide) return self.hide()
 
       self.hoverState = 'out'
-      this.timeout = setTimeout(function() {
+      this.timeout = setTimeout(() => {
         if (self.hoverState == 'out') self.hide()
       }, self.options.delay.hide)
     }
 
-  , show: function () {
-      var $tip
-        , inside
-        , pos
-        , actualWidth
-        , actualHeight
-        , placement
-        , tp
+  , show() {
+    var $tip;
+    var inside;
+    var pos;
+    var actualWidth;
+    var actualHeight;
+    var placement;
+    var tp;
 
-      if (this.hasContent() && this.enabled) {
-        $tip = this.tip()
-        this.setContent()
+    if (this.hasContent() && this.enabled) {
+      $tip = this.tip()
+      this.setContent()
 
-        if (this.options.animation) {
-          $tip.addClass('fade')
-        }
-
-        placement = typeof this.options.placement == 'function' ?
-          this.options.placement.call(this, $tip[0], this.$element[0]) :
-          this.options.placement
-
-        inside = /in/.test(placement)
-
-        $tip
-          .remove()
-          .css({ top: 0, left: 0, display: 'block' })
-          .appendTo(inside ? this.$element : document.body)
-
-        pos = this.getPosition(inside)
-
-        actualWidth = $tip[0].offsetWidth
-        actualHeight = $tip[0].offsetHeight
-
-        switch (inside ? placement.split(' ')[1] : placement) {
-          case 'bottom':
-            tp = {top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2}
-            break
-          case 'top':
-            tp = {top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2}
-            break
-          case 'left':
-            tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth}
-            break
-          case 'right':
-            tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width}
-            break
-        }
-
-        $tip
-          .css(tp)
-          .addClass(placement)
-          .addClass('in')
+      if (this.options.animation) {
+        $tip.addClass('fade')
       }
-    }
 
-  , isHTML: function(text) {
+      placement = typeof this.options.placement == 'function' ?
+        this.options.placement.call(this, $tip[0], this.$element[0]) :
+        this.options.placement
+
+      inside = /in/.test(placement)
+
+      $tip
+        .remove()
+        .css({ top: 0, left: 0, display: 'block' })
+        .appendTo(inside ? this.$element : document.body)
+
+      pos = this.getPosition(inside)
+
+      actualWidth = $tip[0].offsetWidth
+      actualHeight = $tip[0].offsetHeight
+
+      switch (inside ? placement.split(' ')[1] : placement) {
+        case 'bottom':
+          tp = {top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2}
+          break
+        case 'top':
+          tp = {top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2}
+          break
+        case 'left':
+          tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth}
+          break
+        case 'right':
+          tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width}
+          break
+      }
+
+      $tip
+        .css(tp)
+        .addClass(placement)
+        .addClass('in')
+    }
+  }
+
+  , isHTML(text) {
       // html string detection logic adapted from jQuery
       return typeof text != 'string'
         || ( text.charAt(0) === "<"
@@ -157,70 +157,70 @@
         ) || /^(?:[^<]*<[\w\W]+>[^>]*$)/.exec(text)
     }
 
-  , setContent: function () {
-      var $tip = this.tip()
-        , title = this.getTitle()
+  , setContent() {
+    var $tip = this.tip();
+    var title = this.getTitle();
 
-      $tip.find('.tooltip-inner')[this.isHTML(title) ? 'html' : 'text'](title)
-      $tip.removeClass('fade in top bottom left right')
-    }
+    $tip.find('.tooltip-inner')[this.isHTML(title) ? 'html' : 'text'](title)
+    $tip.removeClass('fade in top bottom left right')
+  }
 
-  , hide: function () {
-      var that = this
-        , $tip = this.tip()
+  , hide() {
+    var that = this;
+    var $tip = this.tip();
 
-      $tip.removeClass('in')
+    $tip.removeClass('in')
 
-      function removeWithAnimation() {
-        var timeout = setTimeout(function () {
-          $tip.off($.support.transition.end).remove()
-        }, 500)
+    function removeWithAnimation() {
+      var timeout = setTimeout(() => {
+        $tip.off($.support.transition.end).remove()
+      }, 500)
 
-        $tip.one($.support.transition.end, function () {
-          clearTimeout(timeout)
-          $tip.remove()
-        })
-      }
-
-      $.support.transition && this.$tip.hasClass('fade') ?
-        removeWithAnimation() :
+      $tip.one($.support.transition.end, () => {
+        clearTimeout(timeout)
         $tip.remove()
+      })
     }
 
-  , fixTitle: function () {
+    $.support.transition && this.$tip.hasClass('fade') ?
+      removeWithAnimation() :
+      $tip.remove()
+  }
+
+  , fixTitle() {
       var $e = this.$element
       if ($e.attr('title') || typeof($e.attr('data-original-title')) != 'string') {
         $e.attr('data-original-title', $e.attr('title') || '').removeAttr('title')
       }
     }
 
-  , hasContent: function () {
+  , hasContent() {
       return this.getTitle()
     }
 
-  , getPosition: function (inside) {
+  , getPosition(inside) {
       return $.extend({}, (inside ? {top: 0, left: 0} : this.$element.offset()), {
         width: this.$element[0].offsetWidth
       , height: this.$element[0].offsetHeight
       })
     }
 
-  , getTitle: function () {
-      var title
-        , $e = this.$element
-        , o = this.options
+  , getTitle() {
+    var title;
+    var $e = this.$element;
+    var o = this.options;
 
-      title = $e.attr('data-original-title')
-        || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
+    title = $e.attr('data-original-title')
+      || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
 
-      return title
-    }
+    return title
+  }
 
-  , tip: function () {
+  , tip() {
       return this.$tip = this.$tip || $(this.options.template)
     }
 
-  , validate: function () {
+  , validate() {
       if (!this.$element[0].parentNode) {
         this.hide()
         this.$element = null
@@ -228,19 +228,19 @@
       }
     }
 
-  , enable: function () {
+  , enable() {
       this.enabled = true
     }
 
-  , disable: function () {
+  , disable() {
       this.enabled = false
     }
 
-  , toggleEnabled: function () {
+  , toggleEnabled() {
       this.enabled = !this.enabled
     }
 
-  , toggle: function () {
+  , toggle() {
       this[this.tip().hasClass('in') ? 'hide' : 'show']()
     }
 
@@ -252,12 +252,12 @@
 
   $.fn.tooltip = function ( option ) {
     return this.each(function () {
-      var $this = $(this)
-        , data = $this.data('tooltip')
-        , options = typeof option == 'object' && option
+      var $this = $(this);
+      var data = $this.data('tooltip');
+      var options = typeof option == 'object' && option;
       if (!data) $this.data('tooltip', (data = new Tooltip(this, options)))
       if (typeof option == 'string') data[option]()
-    })
+    });
   }
 
   $.fn.tooltip.Constructor = Tooltip
@@ -272,4 +272,4 @@
   , delay: 0
   }
 
-}(window.jQuery);
+})(window.jQuery);
