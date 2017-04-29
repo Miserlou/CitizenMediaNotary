@@ -18,7 +18,7 @@
  * ========================================================== */
 
 
-!function ($) {
+!($ => {
 
   "use strict"; // jshint ;_;
 
@@ -37,7 +37,7 @@
 
   Carousel.prototype = {
 
-    cycle: function (e) {
+    cycle(e) {
       if (!e) this.paused = false
       this.options.interval
         && !this.paused
@@ -45,87 +45,87 @@
       return this
     }
 
-  , to: function (pos) {
-      var $active = this.$element.find('.active')
-        , children = $active.parent().children()
-        , activePos = children.index($active)
-        , that = this
+  , to(pos) {
+    var $active = this.$element.find('.active');
+    var children = $active.parent().children();
+    var activePos = children.index($active);
+    var that = this;
 
-      if (pos > (children.length - 1) || pos < 0) return
+    if (pos > (children.length - 1) || pos < 0) return
 
-      if (this.sliding) {
-        return this.$element.one('slid', function () {
-          that.to(pos)
-        })
-      }
-
-      if (activePos == pos) {
-        return this.pause().cycle()
-      }
-
-      return this.slide(pos > activePos ? 'next' : 'prev', $(children[pos]))
+    if (this.sliding) {
+      return this.$element.one('slid', () => {
+        that.to(pos)
+      });
     }
 
-  , pause: function (e) {
+    if (activePos == pos) {
+      return this.pause().cycle()
+    }
+
+    return this.slide(pos > activePos ? 'next' : 'prev', $(children[pos]))
+  }
+
+  , pause(e) {
       if (!e) this.paused = true
       clearInterval(this.interval)
       this.interval = null
       return this
     }
 
-  , next: function () {
+  , next() {
       if (this.sliding) return
       return this.slide('next')
     }
 
-  , prev: function () {
+  , prev() {
       if (this.sliding) return
       return this.slide('prev')
     }
 
-  , slide: function (type, next) {
-      var $active = this.$element.find('.active')
-        , $next = next || $active[type]()
-        , isCycling = this.interval
-        , direction = type == 'next' ? 'left' : 'right'
-        , fallback  = type == 'next' ? 'first' : 'last'
-        , that = this
-        , e = $.Event('slide')
+  , slide(type, next) {
+    var $active = this.$element.find('.active');
+    var $next = next || $active[type]();
+    var isCycling = this.interval;
+    var direction = type == 'next' ? 'left' : 'right';
+    var fallback  = type == 'next' ? 'first' : 'last';
+    var that = this;
+    var e = $.Event('slide');
 
-      this.sliding = true
+    this.sliding = true
 
-      isCycling && this.pause()
+    isCycling && this.pause()
 
-      $next = $next.length ? $next : this.$element.find('.item')[fallback]()
+    $next = $next.length ? $next : this.$element.find('.item')[fallback]()
 
-      if ($next.hasClass('active')) return
+    if ($next.hasClass('active')) return
 
-      if ($.support.transition && this.$element.hasClass('slide')) {
-        this.$element.trigger(e)
-        if (e.isDefaultPrevented()) return
-        $next.addClass(type)
-        $next[0].offsetWidth // force reflow
-        $active.addClass(direction)
-        $next.addClass(direction)
-        this.$element.one($.support.transition.end, function () {
-          $next.removeClass([type, direction].join(' ')).addClass('active')
-          $active.removeClass(['active', direction].join(' '))
-          that.sliding = false
-          setTimeout(function () { that.$element.trigger('slid') }, 0)
-        })
-      } else {
-        this.$element.trigger(e)
-        if (e.isDefaultPrevented()) return
-        $active.removeClass('active')
-        $next.addClass('active')
-        this.sliding = false
-        this.$element.trigger('slid')
-      }
-
-      isCycling && this.cycle()
-
-      return this
+    if ($.support.transition && this.$element.hasClass('slide')) {
+      this.$element.trigger(e)
+      if (e.isDefaultPrevented()) return
+      $next.addClass(type)
+      $next[0].offsetWidth // force reflow
+      $active.addClass(direction)
+      $next.addClass(direction)
+      this.$element.one($.support.transition.end, () => {
+        $next.removeClass([type, direction].join(' ')).addClass('active')
+        $active.removeClass(['active', direction].join(' '))
+        that.sliding = false
+        setTimeout(() => { that.$element.trigger('slid') }, 0)
+      })
+    } else {
+      this.$element.trigger(e)
+      if (e.isDefaultPrevented()) return
+      $active.removeClass('active')
+      $next.addClass('active')
+      this.sliding = false
+      this.$element.trigger('slid')
     }
+
+    isCycling && this.cycle()
+
+    return this
+  }
 
   }
 
@@ -135,14 +135,14 @@
 
   $.fn.carousel = function (option) {
     return this.each(function () {
-      var $this = $(this)
-        , data = $this.data('carousel')
-        , options = $.extend({}, $.fn.carousel.defaults, typeof option == 'object' && option)
+      var $this = $(this);
+      var data = $this.data('carousel');
+      var options = $.extend({}, $.fn.carousel.defaults, typeof option == 'object' && option);
       if (!data) $this.data('carousel', (data = new Carousel(this, options)))
       if (typeof option == 'number') data.to(option)
       else if (typeof option == 'string' || (option = options.slide)) data[option]()
       else if (options.interval) data.cycle()
-    })
+    });
   }
 
   $.fn.carousel.defaults = {
@@ -156,14 +156,18 @@
  /* CAROUSEL DATA-API
   * ================= */
 
-  $(function () {
+  $(() => {
     $('body').on('click.carousel.data-api', '[data-slide]', function ( e ) {
-      var $this = $(this), href
-        , $target = $($this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) //strip for ie7
-        , options = !$target.data('modal') && $.extend({}, $target.data(), $this.data())
+      var $this = $(this);
+      var href;
+
+      var //strip for ie7
+      $target = $($this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, ''));
+
+      var options = !$target.data('modal') && $.extend({}, $target.data(), $this.data());
       $target.carousel(options)
       e.preventDefault()
     })
   })
 
-}(window.jQuery);
+})(window.jQuery);

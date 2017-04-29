@@ -11,12 +11,13 @@
 */
 
 // Web requirements
-var app = require('express').createServer()
-  , express = require('express')
-  , jqtpl = require("jqtpl");
+var app = require('express').createServer();
 
-var querystring = require('querystring');  
-var http = require('http'); 
+var express = require('express');
+var jqtpl = require("jqtpl");
+
+var querystring = require('querystring');
+var http = require('http');
 var request = require('request');
 
 // Load the config file,
@@ -28,7 +29,9 @@ var cradle = require('cradle');
 var db = new(cradle.Connection)().database(config.tableName);
 
 // Validation requirements
-var sys = require('util'), fs = require('fs');
+var sys = require('util');
+
+var fs = require('fs');
 var validate = require('commonjs-utils/lib/json-schema').validate;
 var schema;
 
@@ -45,7 +48,7 @@ var privateKey;
 */
 
 // Keys open doors.
-fs.readFile(__dirname + '/crypto/private.pem', 'utf8', function (err,data) {
+fs.readFile(__dirname + '/crypto/private.pem', 'utf8', (err, data) => {
   if (err) {
     console.log("Private key not found!");
     return console.log(err);
@@ -54,7 +57,7 @@ fs.readFile(__dirname + '/crypto/private.pem', 'utf8', function (err,data) {
   console.log("Private key loaded.");
 });
 
-fs.readFile(__dirname + '/crypto/public.pem', 'utf8', function (err,data) {
+fs.readFile(__dirname + '/crypto/public.pem', 'utf8', (err, data) => {
   if (err) {
     console.log("Public key not found!");
     return console.log(err);
@@ -64,13 +67,13 @@ fs.readFile(__dirname + '/crypto/public.pem', 'utf8', function (err,data) {
 });
 
 // TODO: Discovery service.
-fs.readFile(__dirname + '/config/sisters.json', 'utf8', function(err,data) {
+fs.readFile(__dirname + '/config/sisters.json', 'utf8', (err, data) => {
   if(err) throw err;
   sisters = JSON.parse(data);
 });
 
 // Load a schema by which to validate
-fs.readFile(__dirname + '/schema/schema.json', 'utf8', function(err,data) {
+fs.readFile(__dirname + '/schema/schema.json', 'utf8', (err, data) => {
   if(err) throw err;
   schema = JSON.parse(data);
 });
@@ -78,7 +81,7 @@ fs.readFile(__dirname + '/schema/schema.json', 'utf8', function(err,data) {
 /*
   Set up/confirm database.
 */
-db.exists(function (err, exists) {
+db.exists((err, exists) => {
   if (err) {
     console.log('error', err);
   } else if (exists) {
@@ -102,7 +105,7 @@ app.set("view options", {layout: false});
 app.register(".html", require("jqtpl").express);
 
 // Validate, sign, store and duplicate a new record.
-app.post('/new', function(req, res){
+app.post('/new', (req, res) => {
 
     /*
       Validate
@@ -139,7 +142,7 @@ app.post('/new', function(req, res){
       console.log(validation.errors);
 
       // Log the error.
-      db.save('error', validation.errors, function (err, res) {
+      db.save('error', validation.errors, (err, res) => {
       if (err) {
           // Something is very, very wrong if you get here.
       } else {
@@ -161,7 +164,7 @@ app.post('/new', function(req, res){
     */
 
     // Bummer this isn't sync
-    db.save(signed_metadata['hash'], signed_metadata, function (err, res) {
+    db.save(signed_metadata['hash'], signed_metadata, (err, res) => {
           if (err) {
               // TODO. Handle error
               console.log('Entry NOT saved!');
@@ -191,7 +194,7 @@ app.post('/new', function(req, res){
 });
 
 // Verify and store a duplicate from a sister server.
-app.post('/duplicate', function(req, res){
+app.post('/duplicate', (req, res) => {
 
     /*
       Validate
@@ -226,7 +229,7 @@ app.post('/duplicate', function(req, res){
       console.log(validation.errors);
 
       // Log the error.
-      db.save('error', validation.errors, function (err, res) {
+      db.save('error', validation.errors, (err, res) => {
       if (err) {
           // Something is very, very wrong if you get here.
       } else {
@@ -242,9 +245,9 @@ app.post('/duplicate', function(req, res){
 });
 
 // Check database for a record with the given hash.
-app.get('/verify/:hash', function (req, res) {
+app.get('/verify/:hash', (req, res) => {
   db.get(req.params.hash, 
-     function (err, doc) {
+     (err, doc) => {
         if (err) {
             res.render(__dirname + '/html/tryagain.html', {domain: config.siteDomain});
         } else {
@@ -256,9 +259,9 @@ app.get('/verify/:hash', function (req, res) {
 
 
 // Check database for a record with the given hash.
-app.get('/verify/json/:hash', function (req, res) {
+app.get('/verify/json/:hash', (req, res) => {
   db.get(req.params.hash, 
-     function (err, doc) {
+     (err, doc) => {
         if (err) {
             res.send("We have no record for a file of with that hash.", 404);
         } else {
@@ -270,22 +273,22 @@ app.get('/verify/json/:hash', function (req, res) {
 
 
 // My public key.
-app.get('/key', function (req, res) {
+app.get('/key', (req, res) => {
   res.send(publicKey);
 
 });
 
-app.get('/sisters', function (req, res) {
+app.get('/sisters', (req, res) => {
   res.send(sisters);
 
 });
 
 // Upload a file
-app.get('/upload', function (req, res) {
+app.get('/upload', (req, res) => {
   res.render(__dirname + '/html/upload.html', {domain: config.siteDomain});
 });
 
-app.post('/upload', function(req, res) {
+app.post('/upload', (req, res) => {
 
   var metadata = {};
   metadata['filename'] = req.files.uploadfile.name;
@@ -334,7 +337,7 @@ app.post('/upload', function(req, res) {
       console.log(validation.errors);
 
       // Log the error.
-      db.save('error', validation.errors, function (err, res) {
+      db.save('error', validation.errors, (err, res) => {
           if (err) {
               // Something is very, very wrong if you get here.
           } else {
@@ -353,7 +356,7 @@ app.post('/upload', function(req, res) {
     /*
       Store
     */
-    db.save(signed_metadata['hash'], signed_metadata, function (err, res) {
+    db.save(signed_metadata['hash'], signed_metadata, (err, res) => {
           if (err) {
               // TODO. Handle error
               console.log('Entry NOT saved!');
@@ -383,7 +386,7 @@ app.post('/upload', function(req, res) {
 );
 
 // Homepage
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   res.render(__dirname + '/html/home.html', {domain: config.siteDomain});
 });
 
@@ -405,7 +408,7 @@ function duplicateNotarization(host, data){
     , json: encoded_data
     }
 
-  , function (error, response, body) {
+  , (error, response, body) => {
       if(response.statusCode == 200){
         console.log('Hooray');
         console.log(body);
